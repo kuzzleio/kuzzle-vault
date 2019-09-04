@@ -1,1 +1,1 @@
-module.exports.Vault = require('./lib/vault.js').default;
+export const Vault = require('./lib/vault.js').default;
