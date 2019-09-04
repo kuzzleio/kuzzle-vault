@@ -1,1 +1,1 @@
-module.exports.Vault = require('./lib/vault.js').default;
+module.exports = require('./lib/vault.js');
