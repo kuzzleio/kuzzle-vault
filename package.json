@@ -1,0 +1,23 @@
+{
+  "name": "kuzzle-vault",
+  "version": "1.0.0",
+  "description": "Encrypt and decrypt secrets with Kuzzle Vault",
+  "main": "./index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuzzleio/kuzzle-vault.git"
+  },
+  "author": "The Kuzzle Team <support@kuzzle.io>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/kuzzleio/kuzzle-vault/issues"
+  },
+  "homepage": "https://github.com/kuzzleio/kuzzle-vault#readme",
+  "dependencies": {
+    "assert": "^2.0.0",
+    "crypto": "^1.0.1"
+  }
+}
