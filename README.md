@@ -117,7 +117,7 @@ encrypt([outputFile, replaceFileIfExist]);
 | Name | Type              | Description |
 | -------- | ----------------- | ----------- |
 | `outputFile`  | <pre>string</pre> | Optional file used to store the encrypted secrets. If not set `encryptedSecretsFile` from the [constructor](#constructor) will be used instead |
-| `replaceFileIfExist`  | <pre>bool</pre> | Optional argument to overwrite the file if it already exist |
+| `replaceFileIfExist`  | <pre>bool</pre> | Optional argument to overwrite the file if it already exists |
 
 
 #### Usage
