@@ -1,0 +1,23 @@
+sudo: required
+language: node_js
+node_js:
+  - 6
+install:
+  - npm install
+script:
+  - npm test && cat ./coverage/lcov.info | ./node_modules/.bin/codecov
+notifications:
+  email: false
+  slack:
+    secure: lcjjpIGmtjOac4SkeMg6rMcUu+3wee+xgEsBC6a1sYCWGKTxs6x22ezCHwBKbjZ9r14wm+2zOfYuBxWtvxkfduB8WVHH/U+2l5Fto37BxFvWSBqBJy+6BzMz+3gH9JvpHHOjuiqotDX8IQwsQhCgO2MIu+clU3F/T2KT9QtZAFzGnD00vjAkPH+9usxTKfFAmKNwETbTCP3cf3s0KOeX8q3YVW7yYV2Rx3lKT6LDtwzRoO1Fuhp6XNgTkKSWnrbkGsr0terSinkwHj/77cgyrnAVKKUo21Oorz9w6lBTOhvj32H0cShta0zk97+E3bhdhCg9hZtF7oqA+u2thLEWRX2luWlN45X6+kpcrEJYg4Zlhd+ABJyk9a68GwP9H9Kqa8+BxTk4tJzf9w/jgKhFcyM2HMBpD97aGqtQMUKXV5lwQPgutL7eGg8irGKwaidWKT9yWRthAQc0xRiv9/zc6Hwtb9RuRi6KZeyKrLFmDT2PP4Y5NhkDV6XFMaxllx0MSaYC4skl59gbrMl3FZWv8xgJUNHHyxfxheg9Apyf1MXGZOqsIlmqky87pO6csqVL1N5MsKrR12EEzBhW+71VnEPph5vNtTU6gm7sIHCkMPUdCbPNZtBnoK+1SF/T8PehgTPIkakFxmqMNy/ApEFHlUT3/5KvAKs37k481QROGV8=
+    on_success: never
+    on_failure: always
+    on_start: never
+deploy:
+  provider: npm
+  email: support@kuzzle.io
+  api_key:
+    secure: lWVKkkSlEZx05gJXc78bc+i8ltPbGDyZdeuyvIxE4HMKxVoRXD37WkIWTMZIdnS39ANU3Z9jHJITyHpehfnArvYaFCon5KEZ0yaKO36oNhnwgW23S/iqMuh2u9b+DRJnaU0FRJs3Bq5vEnpBkaKCw/0dFAOgtgzRF5gGGtDMRUTxlCbELTV228BmcI3kzY1hy+RfG8HfMj7vysCUW1ndDSXYxJ+utBVD9bKj0NHUp/nlJVcD7B3crzjERvfnEeKsqsIogsAw6KqCS27cOdliD/L50AogSjAskBfrQVux8Z3Jl4QUh+UQyQ7YPd4tIa2IkvH8OnFDr8MelLt8kWxTNMr1Ht6Edj2rGJ36EDgXQiScG+1GDhvO6uUsQIIo2sXrM96bcULWvKaLhvsHsjhvcy/f+TbQxPE1Q5n3jVJqH97q+Whny5SYeJTnbK02YVRc+QxtleoxYhcnzgOg3eyvfVAJj9tJk3J2MvH5IEkyRRDgv2GmhNepgnzzg25/GBf7dlS/PtOYNwwL2Ci6W0PNdHzmPN2tPeZ93okp0oDpvglQqa6aP+QPFhtz6YUJT/5WkGLppSng811WFpoIBksET+OP39NeE/jwOQT8r7wEveAlRWlioPLO/HVE+OEL0FRac+NubzLqqdUNlQcM6TyeQmzfQbkIgjKTjkBbUjj6zHY=
+  on:
+    repo: kuzzleio/kuzzle-vault
+    branch: master

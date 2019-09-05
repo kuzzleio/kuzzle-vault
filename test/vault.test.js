@@ -55,7 +55,7 @@ describe('Test: vault core component', () => {
     mockRequire('fs', fsMock);
     Vault = mockRequire.reRequire('../lib/vault');
 
-    vault = new Vault('secrets.json', 'the spoon does not exists', 'secrets.enc.json');
+    vault = new Vault('the spoon does not exists', 'secrets.json', 'secrets.enc.json');
   });
 
   afterEach(() => {
@@ -104,7 +104,7 @@ describe('Test: vault core component', () => {
       vault = new Vault();
 
       try {
-      vault.encrypt();
+        vault.encrypt();
       } catch (error) {
         should(error.name).be.eql('PreconditionError');
         done();
@@ -112,7 +112,7 @@ describe('Test: vault core component', () => {
     });
 
     it('should throw if file already exist and we do not want to replace it', done => {
-      vault = new Vault('secrets.json', 'the spoon does not exists', 'secrets.enc.json');
+      vault = new Vault('the spoon does not exists', 'secrets.json', 'secrets.enc.json');
 
       try {
         vault.encrypt();

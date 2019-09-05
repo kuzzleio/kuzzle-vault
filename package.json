@@ -4,7 +4,10 @@
   "description": "Encrypt and decrypt secrets with Kuzzle Vault",
   "main": "./index.js",
   "scripts": {
-    "test": "nyc --reporter=text-summary --reporter=lcov mocha"
+    "test": "npm run --silent lint && npm run unit-testing",
+    "unit-testing": "nyc --reporter=text-summary --reporter=lcov mocha",
+    "codecov": "codecov",
+    "lint": "eslint --max-warnings=0 ./ ./lib ./test"
   },
   "repository": {
     "type": "git",
@@ -22,6 +25,7 @@
     "lodash": "^4.17.15"
   },
   "devDependencies": {
+    "codecov": "^3.5.0",
     "mocha": "^6.2.0",
     "mock-require": "^3.0.3",
     "nyc": "^14.1.1",
