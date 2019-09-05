@@ -4,7 +4,7 @@
   "description": "Encrypt and decrypt secrets with Kuzzle Vault",
   "main": "./index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nyc --reporter=text-summary --reporter=lcov mocha"
   },
   "repository": {
     "type": "git",
@@ -20,5 +20,13 @@
     "assert": "^2.0.0",
     "crypto": "^1.0.1",
     "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "mocha": "^6.2.0",
+    "mock-require": "^3.0.3",
+    "nyc": "^14.1.1",
+    "should": "^13.2.3",
+    "should-sinon": "0.0.6",
+    "sinon": "^7.4.2"
   }
 }
