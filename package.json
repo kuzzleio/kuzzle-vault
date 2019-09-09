@@ -1,0 +1,35 @@
+{
+  "name": "kuzzle-vault",
+  "version": "1.0.0",
+  "description": "Encrypt and decrypt secrets with Kuzzle Vault",
+  "main": "./index.js",
+  "scripts": {
+    "test": "npm run --silent lint && npm run unit-testing",
+    "unit-testing": "nyc --reporter=text-summary --reporter=lcov mocha",
+    "codecov": "codecov",
+    "lint": "eslint --max-warnings=0 ./ ./lib ./test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kuzzleio/kuzzle-vault.git"
+  },
+  "author": "The Kuzzle Team <support@kuzzle.io>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/kuzzleio/kuzzle-vault/issues"
+  },
+  "homepage": "https://github.com/kuzzleio/kuzzle-vault#readme",
+  "dependencies": {
+    "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "codecov": "^3.5.0",
+    "eslint": "^6.3.0",
+    "mocha": "^6.2.0",
+    "mock-require": "^3.0.3",
+    "nyc": "^14.1.1",
+    "should": "^13.2.3",
+    "should-sinon": "0.0.6",
+    "sinon": "^7.4.2"
+  }
+}
