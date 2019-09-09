@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/kuzzleio/kuzzle-vault#readme",
   "dependencies": {
-    "crypto": "^1.0.1",
     "lodash": "^4.17.15"
   },
   "devDependencies": {
