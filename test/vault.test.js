@@ -3,6 +3,8 @@ const
   sinon = require('sinon'),
   mockRequire = require('mock-require');
 
+require('should-sinon');
+
 describe('Test: vault core component', () => {
   let
     fsMock,
@@ -171,6 +173,76 @@ describe('Test: vault core component', () => {
 
       vault.encrypt();
       sinon.assert.calledOnce(fsMock.writeFileSync);
+    });
+  });
+
+  describe('#encryptKey', () => {
+    it('add an encrypted key in existing file', () => {
+      fsMock.existsSync.returns(true);
+      fsMock.readFileSync.returns('{ "s4": "hcmc" }');
+
+      vault.encryptKey('aws.s3', 'thao dien', 'file.json');
+
+      should(fsMock.writeFileSync).be.calledOnce();
+      const
+        [file, rawJson] = fsMock.writeFileSync.getCall(0).args,
+        json = JSON.parse(rawJson);
+
+      should(file).be.eql('file.json');
+      should(json.aws.s3).not.be.undefined();
+    });
+
+    it('create the file if not exists', () => {
+      fsMock.existsSync.returns(false);
+
+      vault.encryptKey('aws.s3', 'thao dien', 'file.json');
+
+      should(fsMock.writeFileSync).be.calledOnce();
+      const
+        [file, rawJson] = fsMock.writeFileSync.getCall(0).args,
+        json = JSON.parse(rawJson);
+
+      should(file).be.eql('file.json');
+      should(json.aws.s3).not.be.undefined();
+    });
+
+    it('throw if file are passed in argument or in constructor', () => {
+      fsMock.existsSync.returns(false);
+      vault = new Vault('the spoon does not exists');
+
+      should(() => {
+        vault.encryptKey('aws.s3', 'thao dien');
+      }).throw();
+    });
+
+  });
+
+  describe('#decryptKey', () => {
+    it('decrypt a key in file', () => {
+      fsMock.readFileSync.returns('{ "aws": { "s3": "thao dien" } }');
+      vault._decryptData = sinon.stub().returns('decrypted');
+
+      const result = vault.decryptKey('aws.s3', 'file.json');
+
+      should(result).be.eql('decrypted');
+      should(vault._decryptData).be.calledWith('thao dien');
+    });
+
+    it('throw if file are passed in argument or in constructor', () => {
+      fsMock.existsSync.returns(false);
+      vault = new Vault('the spoon does not exists');
+
+      should(() => {
+        vault.decryptKey('aws.s3');
+      }).throw();
+    });
+
+    it('throw if file does not exists', () => {
+      fsMock.existsSync.returns(false);
+
+      should(() => {
+        vault.decryptKey('aws.s3', 'file.json');
+      }).throw();
     });
   });
 });
