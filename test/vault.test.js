@@ -211,7 +211,7 @@ describe('Test: vault core component', () => {
       vault = new Vault('the spoon does not exists');
 
       should(() => {
-        vault.encryptKey('aws.s3', 'thao dien')
+        vault.encryptKey('aws.s3', 'thao dien');
       }).throw();
     });
 
