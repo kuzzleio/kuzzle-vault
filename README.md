@@ -46,13 +46,15 @@ ___
 
 ## Api
 
-[Constructor](#constructor)
-[Decrypt](#decrypt)
-[Encrypt](#encrypt)
+[Vault.constructor](#constructor)
+[Vault.decrypt](#decrypt)
+[Vault.encrypt](#encrypt)
+[Vault.encryptKey](#encryptKey)
+[Vault.decryptKey](#decryptKey)
 
 ___
 
-### Constructor
+### Vault.constructor
 
 The constructor of the `Vault` class.
 
@@ -81,7 +83,7 @@ const vault = new Vault('my vault key', 'secrets.json', 'secrets.enc.json');
 
 ___
 
-### Decrypt
+### Vault.decrypt
 
 Decrypt the content of the file designated by `encryptedSecretsFile` in the [constructor](#constructor) and store the decrypted content inside `secrets` of the `Vault` class.
 
@@ -102,7 +104,57 @@ console.log(vault.secrets); // Display decrypted secrets
 
 ___
 
-### Encrypt
+### Vault.encrypt
+
+Encrypt the content of the file designated by `secretsFile` in the [constructor](#constructor) and store the encrypted content in the file designated by `encryptedSecretsFile` in the [constructor](#constructor) or `outputFile` passed as argument. If the file exists it will be rewritten only if you set the argument `replaceFileIfExist` to `true`.
+
+<br/>
+
+```js
+encrypt([outputFile, replaceFileIfExist]);
+```
+
+**Arguments**
+
+| Name | Type              | Description |
+| -------- | ----------------- | ----------- |
+| `outputFile`  | <pre>string</pre> | Optional file used to store the encrypted secrets. If not set `encryptedSecretsFile` from the [constructor](#constructor) will be used instead |
+| `replaceFileIfExist`  | <pre>bool</pre> | Optional argument to overwrite the file if it already exists |
+
+
+#### Usage
+
+```js
+const vault = new Vault('my vault key', 'secrets.json', 'secrets.enc.json');
+vault.encrypt('new-secrets.enc.json', true);
+```
+
+### Vault.encryptKey
+
+Encrypt the content of the file designated by `secretsFile` in the [constructor](#constructor) and store the encrypted content in the file designated by `encryptedSecretsFile` in the [constructor](#constructor) or `outputFile` passed as argument. If the file exists it will be rewritten only if you set the argument `replaceFileIfExist` to `true`.
+
+<br/>
+
+```js
+encrypt([outputFile, replaceFileIfExist]);
+```
+
+**Arguments**
+
+| Name | Type              | Description |
+| -------- | ----------------- | ----------- |
+| `outputFile`  | <pre>string</pre> | Optional file used to store the encrypted secrets. If not set `encryptedSecretsFile` from the [constructor](#constructor) will be used instead |
+| `replaceFileIfExist`  | <pre>bool</pre> | Optional argument to overwrite the file if it already exists |
+
+
+#### Usage
+
+```js
+const vault = new Vault('my vault key', 'secrets.json', 'secrets.enc.json');
+vault.encrypt('new-secrets.enc.json', true);
+```
+
+### Vault.decryptKey
 
 Encrypt the content of the file designated by `secretsFile` in the [constructor](#constructor) and store the encrypted content in the file designated by `encryptedSecretsFile` in the [constructor](#constructor) or `outputFile` passed as argument. If the file exists it will be rewritten only if you set the argument `replaceFileIfExist` to `true`.
 
