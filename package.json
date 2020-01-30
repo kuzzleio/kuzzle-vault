@@ -1,6 +1,6 @@
 {
   "name": "kuzzle-vault",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Encrypt and decrypt secrets with Kuzzle Vault",
   "main": "./index.js",
   "scripts": {
