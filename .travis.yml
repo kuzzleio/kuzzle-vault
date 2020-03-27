@@ -1,11 +1,11 @@
 sudo: required
 language: node_js
 node_js:
-  - 8
+  - 12
 install:
   - npm install
 script:
-  - npm test && cat ./coverage/lcov.info | ./node_modules/.bin/codecov
+  - npm test
 notifications:
   email: false
   slack:
