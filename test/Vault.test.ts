@@ -1,32 +1,29 @@
-const should = require('should');
-const sinon = require('sinon');
-const crypto = require('crypto');
-
+import * as crypto from 'crypto';
 import * as mockfs from 'mock-fs'
 
 import Vault from '../src/Vault'
 
+const should = require('should');
 require('should-sinon');
 
-const keyHash = (str: string) => {
+const keyHash = (str: string): Buffer => {
   return Buffer.from(crypto.createHash('sha256').update(str).digest());
 };
 
 describe('Vault', () => {
   let encryptedSecrets: any;
-  let VaultClass: any;
+  let decryptedSecrets: any;
   let vault: Vault;
   let vaultKey: string;
-  let vaultKeyHash: string;
 
   beforeEach(() => {
-    // clearSecrets = {
-    //   aws: {
-    //     keyId: 'key id',
-    //     secretKey: 'very long key 1234567890 1234567890 1234567890'
-    //   },
-    //   deep: { nested: { value: 'nested value' } }
-    // };
+    decryptedSecrets = {
+      aws: {
+        keyId: 'key id',
+        secretKey: 'very long key 1234567890 1234567890 1234567890'
+      },
+      deep: { nested: { value: 'nested value' } }
+    };
 
     vaultKey = 'the spoon does not exists';
 
@@ -65,17 +62,41 @@ describe('Vault', () => {
     });
 
     it('should throw in strict mode if there is a vault file and no key', () => {
-
+      should(() => {
+        vault = new Vault('', '/secrets.enc.json');
+      }).throw();
     });
 
     it('should throw in strict mode if there is a vault key and no file', () => {
-
+      should(() => {
+        vault = new Vault(vaultKey, '/other/secrets.enc.json');
+      }).throw();
     });
   });
 
   describe('#decrypt', () => {
     beforeEach(() => {
-      vault = new Vault('the spoon does not exists', 'secrets.enc.json');
+      vault = new Vault('the spoon does not exists', '/secrets.enc.json');
+    });
+
+    it('should decrypt the secrets', () => {
+      vault.decrypt();
+
+      should(vault.secrets.decrypted).be.eql(decryptedSecrets);
+    });
+
+    it('should throw if no vault key has been provided', () => {
+      vault = new Vault('', '/secrets.enc.json', { strict: false });
+
+      should(() => {
+        vault.decrypt();
+      }).throw();
+    });
+
+    it('should throw if the vault file does not exists', () => {
+      should(() => {
+        vault.decrypt('/other/secrets.enc.json');
+      }).throw();
     });
   })
 });

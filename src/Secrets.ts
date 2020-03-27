@@ -30,13 +30,17 @@ export default class Secrets {
 
   public vaultKeyHash: Buffer;
 
+  public emptyKey: boolean;
+
   /**
    * Prepare crypto primitives.
    * Use the key passed in parameter or in environment variable.
    *
    * @param {String?} vaultKey - key used to decrypt the secrets
    */
-  constructor (vaultKey: string) {
+  constructor (vaultKey = '') {
+    this.emptyKey = vaultKey === '';
+
     this.vaultKeyHash = crypto.createHash('sha256')
       .update(vaultKey)
       .digest();
@@ -95,7 +99,7 @@ export default class Secrets {
    *
    * @param {object} encryptedSecrets - object containing the encrypted secrets
    */
-  decryptObject (encryptedSecrets: any) : any {
+  decryptObject (encryptedSecrets: any): any {
     const secrets: any = {};
 
     for (const key of Object.keys(encryptedSecrets)) {
@@ -119,7 +123,7 @@ export default class Secrets {
    *
    * @returns {Object} Same object but with encrypted string values
    */
-  encryptObject (secrets: any) : any {
+  encryptObject (secrets: any): any {
     const encryptedSecrets: any = {};
 
     for (const key of Object.keys(secrets)) {
@@ -146,7 +150,7 @@ export default class Secrets {
    *
    * @returns {String} Encrypted string with IV (format: <encrypted-string>.<iv>)
    */
-  encryptString (decrypted: string) : string {
+  encryptString (decrypted: string): string {
     const iv = crypto.randomBytes(16);
     const cipher = crypto.createCipheriv('aes-256-cbc', this.vaultKeyHash, iv);
 
@@ -164,7 +168,7 @@ export default class Secrets {
    *
    * @returns {String} Decrypted string
    */
-  decryptString (encrypted: string) : string {
+  decryptString (encrypted: string): string {
     const [ encryptedData, ivHex ] = encrypted.split('.');
 
     if (encryptedData.length === 0 || ivHex.length !== 32) {

@@ -1,14 +1,12 @@
 const should = require('should');
 
-require('should-sinon');
-
 import Secrets from '../src/Secrets'
 
 describe('Secrets', () => {
-  let vaultKey: string = 'the spoon does not exists';
+  const vaultKey = 'the spoon does not exists';
   let decryptedSecrets: any;
   let encryptedSecrets: any;
-  let secrets : Secrets;
+  let secrets: Secrets;
 
   beforeEach(() => {
     decryptedSecrets = {

@@ -25,11 +25,11 @@ import * as fs from 'fs'
 import Secrets from './Secrets'
 
 export interface VaultOptions {
-  strict: boolean
+  strict: boolean;
 }
 
 export default class Vault {
-  public secrets?: Secrets;
+  public secrets: Secrets;
 
   public encryptedVaultPath: string;
 
@@ -41,7 +41,7 @@ export default class Vault {
    * @param {String} encryptedVaultPath - Path to secrets file (or KUZZLE_VAULT_PATH)
    * @param {VaultOptions} options
    */
-  constructor (vaultKey: string = '', encryptedVaultPath: string = '', options: VaultOptions = { strict: true }) {
+  constructor (vaultKey = '', encryptedVaultPath = '', options: VaultOptions = { strict: true }) {
     const KUZZLE_VAULT_KEY = process.env.KUZZLE_VAULT_KEY;
 
     // delete the key from RAM
@@ -53,6 +53,9 @@ export default class Vault {
     else if (vaultKey.length > 0) {
       this.secrets = new Secrets(vaultKey);
     }
+    else {
+      this.secrets = new Secrets();
+    }
 
     this.encryptedVaultPath = process.env.KUZZLE_VAULT_PATH || encryptedVaultPath;
 
@@ -60,17 +63,17 @@ export default class Vault {
     if (options.strict) {
       const vaultExists = fs.existsSync(this.encryptedVaultPath);
 
-      if (vaultExists && ! this.secrets) {
+      if (vaultExists && this.secrets.emptyKey) {
         throw new Error('Vault file provided and no Vault key provided');
       }
 
-      if (this.secrets && ! vaultExists) {
+      if (! this.secrets.emptyKey && ! vaultExists) {
         throw new Error('Vault key provided and no Vault file');
       }
     }
   }
 
-  decrypt (encryptedVaultPath: string = ''): any {
+  decrypt (encryptedVaultPath = ''): void {
     if (! this.secrets) {
       throw new Error('No Vault key provided');
     }
@@ -85,7 +88,7 @@ export default class Vault {
 
     const encryptedSecretsString = fs.readFileSync(path, 'utf-8');
 
-    return this.secrets.decrypt(encryptedSecretsString);
+    this.secrets.decrypt(encryptedSecretsString);
   }
 }
 
