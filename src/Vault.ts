@@ -31,17 +31,13 @@ export interface VaultOptions {
 export default class Vault {
   public secrets: Secrets;
 
-  public encryptedVaultPath: string;
-
   /**
    * Initialize the vault with the provided vault key or with the environment
    * variable KUZZLE_VAULT_KEY
    *
-   * @param {String} vaultKey - Vault key (or KUZZLE_VAULT_KEY)
-   * @param {String} encryptedVaultPath - Path to secrets file (or KUZZLE_VAULT_PATH)
-   * @param {VaultOptions} options
+   * @param {String|undefined} vaultKey - Vault key
    */
-  constructor (vaultKey = '', encryptedVaultPath = '', options: VaultOptions = { strict: true }) {
+  constructor (vaultKey?: string) {
     const KUZZLE_VAULT_KEY = process.env.KUZZLE_VAULT_KEY;
 
     // delete the key from RAM
@@ -50,43 +46,24 @@ export default class Vault {
     if (KUZZLE_VAULT_KEY && KUZZLE_VAULT_KEY.length > 0) {
       this.secrets = new Secrets(KUZZLE_VAULT_KEY);
     }
-    else if (vaultKey.length > 0) {
+    else if (vaultKey) {
       this.secrets = new Secrets(vaultKey);
     }
     else {
       this.secrets = new Secrets();
     }
-
-    this.encryptedVaultPath = process.env.KUZZLE_VAULT_PATH || encryptedVaultPath;
-
-    // prevent vault loading without decryptable secrets
-    if (options.strict) {
-      const vaultExists = fs.existsSync(this.encryptedVaultPath);
-
-      if (vaultExists && this.secrets.emptyKey) {
-        throw new Error('Vault file provided and no Vault key provided');
-      }
-
-      if (! this.secrets.emptyKey && ! vaultExists) {
-        throw new Error('Vault key provided and no Vault file');
-      }
-    }
   }
 
-  decrypt (encryptedVaultPath = ''): void {
-    if (! this.secrets) {
+  decrypt (encryptedVaultPath: string): void {
+    if (this.secrets.emptyKey) {
       throw new Error('No Vault key provided');
     }
 
-    const path = encryptedVaultPath.length > 0
-      ? encryptedVaultPath
-      : this.encryptedVaultPath;
-
-    if (! fs.existsSync(path)) {
-      throw new Error(`Unable to find vault at "${path}"`);
+    if (! fs.existsSync(encryptedVaultPath)) {
+      throw new Error(`Unable to find vault at "${encryptedVaultPath}"`);
     }
 
-    const encryptedSecretsString = fs.readFileSync(path, 'utf-8');
+    const encryptedSecretsString = fs.readFileSync(encryptedVaultPath, 'utf-8');
 
     this.secrets.decrypt(encryptedSecretsString);
   }

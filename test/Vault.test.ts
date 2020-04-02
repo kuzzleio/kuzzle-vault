@@ -47,7 +47,7 @@ describe('Vault', () => {
 
   describe('#constructor', () => {
     it('should use the vault key in parameter', () => {
-      vault = new Vault(vaultKey, '/secrets.enc.json');
+      vault = new Vault(vaultKey);
 
       should(vault.secrets?.vaultKeyHash).be.eql(keyHash(vaultKey));
     });
@@ -55,41 +55,29 @@ describe('Vault', () => {
     it('should use env variable if provided', () => {
       process.env.KUZZLE_VAULT_KEY = 'bend your reality';
 
-      vault = new Vault(vaultKey, '/secrets.enc.json');
+      vault = new Vault(vaultKey);
 
       should(vault.secrets?.vaultKeyHash).be.eql(keyHash('bend your reality'));
       should(process.env.KUZZLE_VAULT_KEY).be.undefined();
-    });
-
-    it('should throw in strict mode if there is a vault file and no key', () => {
-      should(() => {
-        vault = new Vault('', '/secrets.enc.json');
-      }).throw();
-    });
-
-    it('should throw in strict mode if there is a vault key and no file', () => {
-      should(() => {
-        vault = new Vault(vaultKey, '/other/secrets.enc.json');
-      }).throw();
     });
   });
 
   describe('#decrypt', () => {
     beforeEach(() => {
-      vault = new Vault('the spoon does not exists', '/secrets.enc.json');
+      vault = new Vault('the spoon does not exists');
     });
 
     it('should decrypt the secrets', () => {
-      vault.decrypt();
+      vault.decrypt('/secrets.enc.json');
 
       should(vault.secrets.decrypted).be.eql(decryptedSecrets);
     });
 
     it('should throw if no vault key has been provided', () => {
-      vault = new Vault('', '/secrets.enc.json', { strict: false });
+      vault = new Vault();
 
       should(() => {
-        vault.decrypt();
+        vault.decrypt('/secrets.enc.json');
       }).throw();
     });
 
