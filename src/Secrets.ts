@@ -65,7 +65,7 @@ export default class Secrets {
     }
     catch (error) {
       if (error instanceof SyntaxError) {
-        throw new Error(`Provided string are not a valid JSON string: ${error.message}`)
+        throw new Error(`Provided string is not a valid JSON string: ${error.message}`)
       }
 
       throw error;
@@ -86,7 +86,7 @@ export default class Secrets {
     }
     catch (error) {
       if (error instanceof SyntaxError) {
-        throw new Error(`Provided string are not a valid JSON string: ${error.message}`)
+        throw new Error(`Provided string is not a valid JSON string: ${error.message}`)
       }
 
       throw error;
