@@ -12,7 +12,7 @@
 
 ## About
 
-Kuzzle Vault offers a secure storage system for secrets. It can encrypt your secrets inside a file and also decrypt in memory the encrypted file.
+Kuzzle Vault offers a secure storage system for secrets. It can encrypt your secrets in a file then easily decrypt & load them into memory.
 
 ___
 
