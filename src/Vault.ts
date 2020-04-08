@@ -22,7 +22,7 @@
 'use strict';
 
 import * as fs from 'fs'
-import Secrets from './Secrets'
+import { Secrets } from './Secrets'
 
 export interface VaultOptions {
   strict: boolean;
@@ -35,7 +35,7 @@ export default class Vault {
    * Initialize the vault with the provided vault key or with the environment
    * variable KUZZLE_VAULT_KEY
    *
-   * @param {String|undefined} vaultKey - Vault key
+   * @param {string|undefined} vaultKey - Vault key
    */
   constructor (vaultKey?: string) {
     const KUZZLE_VAULT_KEY = process.env.KUZZLE_VAULT_KEY;

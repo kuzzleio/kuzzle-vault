@@ -1,6 +1,6 @@
 const should = require('should');
 
-import Secrets from '../src/Secrets'
+import { Secrets } from '../src/Secrets'
 
 describe('Secrets', () => {
   const vaultKey = 'the spoon does not exists';

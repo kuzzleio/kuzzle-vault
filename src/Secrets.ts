@@ -23,20 +23,20 @@
 
 import * as crypto from 'crypto'
 
-export default class Secrets {
-  public decrypted: any;
+export class Secrets {
+  decrypted: {};
 
-  public encrypted: any;
+  encrypted: {};
 
-  public vaultKeyHash: Buffer;
+  vaultKeyHash: Buffer;
 
-  public emptyKey: boolean;
+  emptyKey: boolean;
 
   /**
    * Prepare crypto primitives.
    * Use the key passed in parameter or in environment variable.
    *
-   * @param {String?} vaultKey - key used to decrypt the secrets
+   * @param {string?} vaultKey - key used to decrypt the secrets
    */
   constructor (vaultKey = '') {
     this.emptyKey = vaultKey === '';
@@ -51,13 +51,15 @@ export default class Secrets {
   }
 
   /**
-   * Decrypts secrets from JSON string
+   * Decrypts secrets from JSON string and store them in the "decrypted" property
    *
-   * @param {String} encryptedSecretsString - Encrypted secrets in JSON format
+   * @param {string} encryptedSecretsString - Encrypted secrets in JSON format
+   *
+   * @returns {string} JSON string containing decrypted secrets
    */
-  decrypt (encryptedSecretsString: string): any {
+  decrypt (encryptedSecretsString: string): string {
     try {
-      const encryptedSecrets: any = JSON.parse(encryptedSecretsString);
+      const encryptedSecrets: {} = JSON.parse(encryptedSecretsString);
 
       this.decrypted = this.decryptObject(encryptedSecrets);
 
@@ -75,10 +77,13 @@ export default class Secrets {
   /**
    * Encrypts secrets from JSON string
    *
+   * @param {string} clearSecretsString - JSON string containing the clear secrets
+   *
+   * @returns {string} JSON string containing the encrypted secrets
    */
   encrypt (clearSecretsString: string): string {
     try {
-      const clearSecrets: any = JSON.parse(clearSecretsString);
+      const clearSecrets: {} = JSON.parse(clearSecretsString);
 
       this.encrypted = this.encryptObject(clearSecrets)
 
@@ -98,8 +103,10 @@ export default class Secrets {
    * decrypt strings only.
    *
    * @param {object} encryptedSecrets - object containing the encrypted secrets
+   *
+   * @returns {Object} Object with decrypted values
    */
-  decryptObject (encryptedSecrets: any): any {
+  decryptObject (encryptedSecrets: any): {} {
     const secrets: any = {};
 
     for (const key of Object.keys(encryptedSecrets)) {
@@ -123,7 +130,7 @@ export default class Secrets {
    *
    * @returns {Object} Same object but with encrypted string values
    */
-  encryptObject (secrets: any): any {
+  encryptObject (secrets: any): {} {
     const encryptedSecrets: any = {};
 
     for (const key of Object.keys(secrets)) {
@@ -146,9 +153,9 @@ export default class Secrets {
    * something and we store it next to the encrypted data.
    * See https://www.wikiwand.com/en/Block_cipher_mode_of_operation#/Initialization_vector_(IV)
    *
-   * @param {String} decrypted - String to encrypt
+   * @param {string} decrypted - String to encrypt
    *
-   * @returns {String} Encrypted string with IV (format: <encrypted-string>.<iv>)
+   * @returns {string} Encrypted string with IV (format: <encrypted-string>.<iv>)
    */
   encryptString (decrypted: string): string {
     const iv = crypto.randomBytes(16);
@@ -164,9 +171,9 @@ export default class Secrets {
    * Decrypts a string with AES CBC using the initialization vector
    * and the sha256 hashed secret key
    *
-   * @param {String} encrypted - String to decrypt (format: <encrypted-string>.<iv>)
+   * @param {string} encrypted - String to decrypt (format: <encrypted-string>.<iv>)
    *
-   * @returns {String} Decrypted string
+   * @returns {string} Decrypted string
    */
   decryptString (encrypted: string): string {
     const [ encryptedData, ivHex ] = encrypted.split('.');
