@@ -82,10 +82,6 @@ vault.decrypt('config/prod/secrets.enc.json');
 vault.secrets
 ```
 
-### Strict mode
-
-In production, you may want to ensure that 
-
 ## Vault class
 
 [Vault.constructor](#constructor)
