@@ -12,7 +12,7 @@
 
 ## About
 
-Kuzzle Vault offers a secure storage system for secrets. It can encrypt inside a file your secrets and also decrypt in memory the encrypted file.
+Kuzzle Vault offers a secure storage system for secrets. It can encrypt your secrets in a file then easily decrypt & load them into memory.
 
 ___
 
@@ -44,13 +44,48 @@ Once encrypted, the file looks like the following:
 
 ___
 
-## Api
+## Usage
+
+First, you need to encrypt your secrets. The easiest way to do that is to use Kourou, the Kuzzle CLI.
+
+```bash
+$ kourou vault:encrypt config/prod/secrets.json --vault-key <password>
+
+ 🚀 Kourou - Encrypts an entire file.
+ 
+ [✔] Secrets were successfully encrypted into the file config/prod/secrets.enc.json
+```
+
+Then, you can securely store your secrets inside your repository and share them with you team. 
+
+To load the secrets inside an application, instantiate the Vault with the same password as for the encryption and the path to the secrets file.  
+
+Then, use the decrypt method to load the secrets into the memory.  
+
+```js
+const vault = new Vault('password');
+vault.decrypt('config/prod/secrets.env.json');
+
+// secrets are now available
+vault.secrets
+```
+
+You can also provide the password with the environment variable `KUZZLE_VAULT_KEY`.  
+
+```js
+// process.env.KUZZLE_VAULT_KEY = 'password'
+
+const vault = new Vault();
+vault.decrypt('config/prod/secrets.enc.json');
+
+// secrets are now available
+vault.secrets
+```
+
+## Vault class
 
 [Vault.constructor](#constructor)
 [Vault.decrypt](#decrypt)
-[Vault.encrypt](#encrypt)
-[Vault.encryptKey](#encryptKey)
-[Vault.decryptKey](#decryptKey)
 
 ___
 
@@ -59,122 +94,39 @@ ___
 The constructor of the `Vault` class.
 
 ```js
-Vault(vaultKey [, secretsFile, encryptedSecretsFile]);
+Vault(vaultKey: string | undefined);
 ```
 
 **Arguments**
 
 | Name | Type              | Description |
 | -------- | ----------------- | ----------- |
-| `vaultKey`  | <pre>string</pre> | The key used to encrypt and decrypt secrets   |
-| `secretsFile`  | <pre>string</pre> | Optional secrets file   |
-| `encryptedSecretsFile`  | <pre>string</pre> | Optional encrypted secrets file   |
-
-**Properties**
-
-| Property | Type | Description |
-| `secrets` | <pre>string</pre> | The decrypted secrets after calling [decrypt](#decrypt) |
+| `vaultKey`  | <pre>String</pre> | The key used to encrypt and decrypt secrets   |
 
 #### Usage
 
 ```js
-const vault = new Vault('my vault key', 'secrets.json', 'secrets.enc.json');
+const vault = new Vault('my vault key');
 ```
 
 ___
 
 ### Vault.decrypt
 
-Decrypt the content of the file designated by `encryptedSecretsFile` in the [constructor](#constructor) and store the decrypted content inside `secrets` of the `Vault` class.
+Decrypts the content of the file designated by `encryptedVaultPath` and store the decrypted content inside the property `secrets` of the `Vault` class.
 
 <br/>
 
 ```js
-decrypt();
+decrypt(encryptedVaultPath: string);
 ```
 
 
 #### Usage
 
 ```js
-const vault = new Vault('my vault key', 'secrets.json', 'secrets.enc.json');
-vault.decrypt();
-console.log(vault.secrets); // Display decrypted secrets
-```
+const vault = new Vault('my vault key');
+vault.decrypt('path/to/secrets.enc.json');
 
-___
-
-### Vault.encrypt
-
-Encrypt the content of the file designated by `secretsFile` in the [constructor](#constructor) and store the encrypted content in the file designated by `encryptedSecretsFile` in the [constructor](#constructor) or `outputFile` passed as argument. If the file exists it will be rewritten only if you set the argument `replaceFileIfExist` to `true`.
-
-<br/>
-
-```js
-encrypt([outputFile, replaceFileIfExist]);
-```
-
-**Arguments**
-
-| Name | Type              | Description |
-| -------- | ----------------- | ----------- |
-| `outputFile`  | <pre>string</pre> | Optional file used to store the encrypted secrets. If not set `encryptedSecretsFile` from the [constructor](#constructor) will be used instead |
-| `replaceFileIfExist`  | <pre>bool</pre> | Optional argument to overwrite the file if it already exists |
-
-
-#### Usage
-
-```js
-const vault = new Vault('my vault key', 'secrets.json', 'secrets.enc.json');
-vault.encrypt('new-secrets.enc.json', true);
-```
-
-### Vault.encryptKey
-
-Encrypt the content of the file designated by `secretsFile` in the [constructor](#constructor) and store the encrypted content in the file designated by `encryptedSecretsFile` in the [constructor](#constructor) or `outputFile` passed as argument. If the file exists it will be rewritten only if you set the argument `replaceFileIfExist` to `true`.
-
-<br/>
-
-```js
-encrypt([outputFile, replaceFileIfExist]);
-```
-
-**Arguments**
-
-| Name | Type              | Description |
-| -------- | ----------------- | ----------- |
-| `outputFile`  | <pre>string</pre> | Optional file used to store the encrypted secrets. If not set `encryptedSecretsFile` from the [constructor](#constructor) will be used instead |
-| `replaceFileIfExist`  | <pre>bool</pre> | Optional argument to overwrite the file if it already exists |
-
-
-#### Usage
-
-```js
-const vault = new Vault('my vault key', 'secrets.json', 'secrets.enc.json');
-vault.encrypt('new-secrets.enc.json', true);
-```
-
-### Vault.decryptKey
-
-Encrypt the content of the file designated by `secretsFile` in the [constructor](#constructor) and store the encrypted content in the file designated by `encryptedSecretsFile` in the [constructor](#constructor) or `outputFile` passed as argument. If the file exists it will be rewritten only if you set the argument `replaceFileIfExist` to `true`.
-
-<br/>
-
-```js
-encrypt([outputFile, replaceFileIfExist]);
-```
-
-**Arguments**
-
-| Name | Type              | Description |
-| -------- | ----------------- | ----------- |
-| `outputFile`  | <pre>string</pre> | Optional file used to store the encrypted secrets. If not set `encryptedSecretsFile` from the [constructor](#constructor) will be used instead |
-| `replaceFileIfExist`  | <pre>bool</pre> | Optional argument to overwrite the file if it already exists |
-
-
-#### Usage
-
-```js
-const vault = new Vault('my vault key', 'secrets.json', 'secrets.enc.json');
-vault.encrypt('new-secrets.enc.json', true);
+vault.secrets // Contains decrypted secrets
 ```

@@ -1,13 +1,19 @@
 {
   "name": "kuzzle-vault",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Encrypt and decrypt secrets with Kuzzle Vault",
-  "main": "./index.js",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "scripts": {
-    "test": "npm run --silent lint && npm run unit-testing",
-    "unit-testing": "nyc --reporter=text-summary --reporter=lcov mocha",
-    "codecov": "codecov",
-    "lint": "eslint --max-warnings=0 ./ ./lib ./test"
+    "test": "npm run --silent test:lint && npm run test:unit",
+    "test:unit": "mocha -r ts-node/register test/*",
+    "test:lint": "eslint src/ test/ --max-warnings=0 --ext .ts --config .eslintrc",
+    "check": "gts check",
+    "clean": "gts clean",
+    "compile": "tsc -p .",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile"
   },
   "repository": {
     "type": "git",
@@ -19,17 +25,23 @@
     "url": "https://github.com/kuzzleio/kuzzle-vault/issues"
   },
   "homepage": "https://github.com/kuzzleio/kuzzle-vault#readme",
-  "dependencies": {
-    "lodash": "^4.17.15"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "codecov": "^3.5.0",
-    "eslint": "^6.3.0",
+    "@types/mocha": "^7.0.2",
+    "@types/mock-fs": "^4.10.0",
+    "@types/node": "^10.0.3",
+    "@types/should": "^13.0.0",
+    "@types/sinon": "^7.5.2",
+    "@typescript-eslint/eslint-plugin": "^2.25.0",
+    "@typescript-eslint/parser": "^2.25.0",
+    "eslint": "^6.8.0",
+    "gts": "^1.1.2",
     "mocha": "^6.2.0",
-    "mock-require": "^3.0.3",
-    "nyc": "^14.1.1",
+    "mock-fs": "^4.11.0",
     "should": "^13.2.3",
     "should-sinon": "0.0.6",
-    "sinon": "^7.4.2"
+    "sinon": "^7.4.2",
+    "ts-node": "^8.8.1",
+    "typescript": "~3.7.0"
   }
 }
