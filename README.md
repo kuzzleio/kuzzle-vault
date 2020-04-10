@@ -113,7 +113,7 @@ ___
 
 ### Vault.decrypt
 
-Decrypt the content of the file designated by `encryptedVaultPath` and store the decrypted content inside the property `secrets` of the `Vault` class.
+Decrypts the content of the file designated by `encryptedVaultPath` and store the decrypted content inside the property `secrets` of the `Vault` class.
 
 <br/>
 
