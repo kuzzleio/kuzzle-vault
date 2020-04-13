@@ -23,7 +23,7 @@
 
 import * as crypto from 'crypto'
 
-export class Secrets {
+export default class Secrets {
   decrypted: {};
 
   encrypted: {};

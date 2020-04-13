@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
-export * from './Secrets'
+import Secrets from './Secrets'
 
-export * from './Vault'
+import Vault from './Vault'
+
+export { Vault, Secrets }

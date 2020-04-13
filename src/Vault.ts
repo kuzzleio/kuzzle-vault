@@ -22,12 +22,11 @@
 'use strict';
 
 import * as fs from 'fs'
-import { Secrets } from './Secrets'
+import Secrets from './Secrets'
 
 export interface VaultOptions {
   strict: boolean;
 }
-
 export default class Vault {
   public secrets: Secrets;
 
