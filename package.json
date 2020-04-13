@@ -1,6 +1,6 @@
 {
   "name": "kuzzle-vault",
-  "version": "2.0.0",
+  "version": "2.0.0-beta.1",
   "description": "Encrypt and decrypt secrets with Kuzzle Vault",
   "main": "build/index.js",
   "types": "build/index.d.ts",
