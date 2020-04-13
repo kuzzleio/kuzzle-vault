@@ -49,7 +49,7 @@ describe('Vault', () => {
     it('should use the vault key in parameter', () => {
       vault = new Vault(vaultKey);
 
-      should(vault.secrets?.vaultKeyHash).be.eql(keyHash(vaultKey));
+      should(vault.cryptonomicon?.vaultKeyHash).be.eql(keyHash(vaultKey));
     });
 
     it('should use env variable if provided', () => {
@@ -57,7 +57,7 @@ describe('Vault', () => {
 
       vault = new Vault(vaultKey);
 
-      should(vault.secrets?.vaultKeyHash).be.eql(keyHash('bend your reality'));
+      should(vault.cryptonomicon?.vaultKeyHash).be.eql(keyHash('bend your reality'));
       should(process.env.KUZZLE_VAULT_KEY).be.undefined();
     });
   });
@@ -70,7 +70,7 @@ describe('Vault', () => {
     it('should decrypt the secrets', () => {
       vault.decrypt('/secrets.enc.json');
 
-      should(vault.secrets.decrypted).be.eql(decryptedSecrets);
+      should(vault.secrets).be.eql(decryptedSecrets);
     });
 
     it('should throw if no vault key has been provided', () => {

@@ -19,8 +19,8 @@
  * limitations under the License.
  */
 
-import Secrets from './Secrets'
+import Cryptonomicon from './Cryptonomicon'
 
 import Vault from './Vault'
 
-export { Vault, Secrets }
+export { Vault, Cryptonomicon }

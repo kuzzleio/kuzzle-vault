@@ -22,13 +22,12 @@
 'use strict';
 
 import * as fs from 'fs'
-import Secrets from './Secrets'
+import Cryptonomicon from './Cryptonomicon'
 
-export interface VaultOptions {
-  strict: boolean;
-}
 export default class Vault {
-  public secrets: Secrets;
+  public cryptonomicon: Cryptonomicon;
+
+  public secrets: {};
 
   /**
    * Initialize the vault with the provided vault key or with the environment
@@ -43,18 +42,20 @@ export default class Vault {
     delete process.env.KUZZLE_VAULT_KEY;
 
     if (KUZZLE_VAULT_KEY && KUZZLE_VAULT_KEY.length > 0) {
-      this.secrets = new Secrets(KUZZLE_VAULT_KEY);
+      this.cryptonomicon = new Cryptonomicon(KUZZLE_VAULT_KEY);
     }
     else if (vaultKey) {
-      this.secrets = new Secrets(vaultKey);
+      this.cryptonomicon = new Cryptonomicon(vaultKey);
     }
     else {
-      this.secrets = new Secrets();
+      this.cryptonomicon = new Cryptonomicon();
     }
+
+    this.secrets = {};
   }
 
   decrypt (encryptedVaultPath: string): void {
-    if (this.secrets.emptyKey) {
+    if (this.cryptonomicon.emptyKey) {
       throw new Error('No Vault key provided');
     }
 
@@ -62,9 +63,16 @@ export default class Vault {
       throw new Error(`Unable to find vault at "${encryptedVaultPath}"`);
     }
 
-    const encryptedSecretsString = fs.readFileSync(encryptedVaultPath, 'utf-8');
+    let encryptedSecrets;
+    try {
+      encryptedSecrets = JSON.parse(fs.readFileSync(encryptedVaultPath, 'utf-8'));
 
-    this.secrets.decrypt(encryptedSecretsString);
+    }
+    catch (error) {
+      throw new Error(`Cannot parse encrypted secrets from file "${encryptedVaultPath}": ${error.message}`);
+    }
+
+    this.secrets = this.cryptonomicon.decryptObject(encryptedSecrets);
   }
 }
 
