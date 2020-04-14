@@ -31,7 +31,7 @@ export default class Vault {
 
   /**
    * Initialize the vault with the provided vault key or with the environment
-   * variable KUZZLE_VAULT_KEY
+   * variable KUZZLE_VAULT_KEY (and then delete it from env)
    *
    * @param {string|undefined} vaultKey - Vault key
    */

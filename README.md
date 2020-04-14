@@ -46,7 +46,7 @@ ___
 
 ## Usage
 
-First, you need to encrypt your secrets. The easiest way to do that is to use Kourou, the Kuzzle CLI.
+First, you need to encrypt your secrets. The easiest way to do that is to use [Kourou, the Kuzzle CLI](https://github.com/kuzzleio/kourou/#kourou-vaultadd-secrets-file-key-value).
 
 ```bash
 $ kourou vault:encrypt config/prod/secrets.json --vault-key <password>
@@ -64,7 +64,7 @@ Then, use the decrypt method to load the secrets into the memory.
 
 ```js
 const vault = new Vault('password');
-vault.decrypt('config/prod/secrets.env.json');
+vault.decrypt('config/prod/secrets.enc.json');
 
 // secrets are now available
 vault.secrets
@@ -73,7 +73,7 @@ vault.secrets
 You can also provide the password with the environment variable `KUZZLE_VAULT_KEY`.  
 
 ```js
-// process.env.KUZZLE_VAULT_KEY = 'password'
+// process.env.KUZZLE_VAULT_KEY === 'password'
 
 const vault = new Vault();
 vault.decrypt('config/prod/secrets.enc.json');
@@ -130,3 +130,15 @@ vault.decrypt('path/to/secrets.enc.json');
 
 vault.secrets // Contains decrypted secrets
 ```
+
+## [Cryptonomicon](./src/Cryptonomicon.ts) class
+
+This class contains the cryptography primitives used to encrypt and decrypt the secrets.  
+
+There are 4 methods available:
+ - `decryptObject`
+ - `encryptObject`
+ - `encryptString`
+ - `decryptString`
+
+You can use this class to build your own tools to decrypt or encrypt secrets inside your application.
