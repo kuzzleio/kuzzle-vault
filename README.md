@@ -35,9 +35,9 @@ $ kourou vault:encrypt config/prod/secrets.json --vault-key <password>
 
 Then, you can securely store your secrets inside your repository and share them with you team. 
 
-To load the secrets inside an application, instantiate the Vault with the same password as for the encryption and the path to the secrets file.  
+To load the secrets inside an application, instantiate the Vault with the same password as for the encryption.
 
-Then, use the decrypt method to load the secrets into the memory.  
+Then, use the decrypt method with the path of the encrypted secrets file to load the secrets into the memory.  
 
 ```js
 const vault = new Vault('password');
