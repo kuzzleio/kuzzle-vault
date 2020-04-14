@@ -12,36 +12,13 @@
 
 ## About
 
-Kuzzle Vault offers a secure storage system for secrets. It can encrypt your secrets in a file then easily decrypt & load them into memory.
+Kuzzle Vault is a system to securely share your API keys and other secrets within your team.
 
-___
+Secrets are saved in an encrypted JSON file that you can version with your code.
 
-### Secrets file format
+You only need to share one encryption key with your team members.
 
-The secrets file is in JSON format. String values are encrypted but the key names remain the same.
-
-```json
-/* secrets.json */
-{
-  "aws": {
-    "secretKeyId": "lfiduras"
-  },
-  "cloudinaryKey": "ho-chi-minh"
-}
-```
-
-Once encrypted, the file looks like the following:
-
-```json
-/* secrets.enc.json */
-{
-  "aws": {
-    "secretKeyId": "536553f3181ada6f700cac98100f1266.3181ada66536553f"
-  },
-  "cloudinaryKey": "f700cac98100f1266536553f3181ada6.6536553f3181ada"
-}
-```
-
+Then you can load and decrypt the contents of the file into your application memory for secure usage.
 ___
 
 ## Usage
@@ -80,6 +57,32 @@ vault.decrypt('config/prod/secrets.enc.json');
 
 // secrets are now available
 vault.secrets
+```
+
+### Secrets file format
+
+The secrets file is in JSON format. String values are encrypted but the key names remain the same.
+
+```json
+/* secrets.json */
+{
+  "aws": {
+    "secretKeyId": "lfiduras"
+  },
+  "cloudinaryKey": "ho-chi-minh"
+}
+```
+
+Once encrypted, the file looks like the following:
+
+```json
+/* secrets.enc.json */
+{
+  "aws": {
+    "secretKeyId": "536553f3181ada6f700cac98100f1266.3181ada66536553f"
+  },
+  "cloudinaryKey": "f700cac98100f1266536553f3181ada6.6536553f3181ada"
+}
 ```
 
 ## Vault class
