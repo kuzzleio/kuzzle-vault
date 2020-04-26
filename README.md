@@ -12,13 +12,16 @@
 
 ## About
 
-Kuzzle Vault is a system to securely share your API keys and other secrets within your team.
+Kuzzle Vault is a system to **securely share your API keys** and other secrets within your team.
 
-Secrets are saved in an encrypted JSON file that you can version with your code.
+Secrets are saved in **an encrypted JSON file** that you can version alongside your code.
 
-You only need to share one encryption key with your team members.
+You only need to **share one encryption key** with your team members.
 
-Then you can load and decrypt the contents of the file into your application memory for secure usage.
+Then you can load and decrypt the contents of the file into your **application memory** for secure usage.
+
+See the related article on [Kuzzle Blog](https://blog.kuzzle.io/share-sensitive-data-with-git-and-cryptography)
+
 ___
 
 ## Usage
