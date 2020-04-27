@@ -54,6 +54,11 @@ export default class Vault {
     this.secrets = {};
   }
 
+  /**
+   * Decrypts the secrets contained in the provided file
+   *
+   * @param {String} encryptedVaultPath - Path to the file containing the encrypted secrets
+   */
   decrypt (encryptedVaultPath: string): void {
     if (this.cryptonomicon.emptyKey) {
       throw new Error('No Vault key provided');
@@ -66,7 +71,6 @@ export default class Vault {
     let encryptedSecrets;
     try {
       encryptedSecrets = JSON.parse(fs.readFileSync(encryptedVaultPath, 'utf-8'));
-
     }
     catch (error) {
       throw new Error(`Cannot parse encrypted secrets from file "${encryptedVaultPath}": ${error.message}`);
