@@ -1,0 +1,49 @@
+#!/bin/bash
+
+if [ "$1" = "--help" ];
+then
+  echo "Encrypts a secret for Kuzzle Vault"
+  echo ""
+  echo "Usage: bash kuzzle-vault-encrypt.sh <secret> [password]"
+  echo ""
+  echo "The encrypted string is meant to be put in the JSON file containing encrypted secrets"
+  echo "Encrypted string format is the following: <encrypted-data>.<iv>"
+  echo "More informations on https://github.com/kuzzleio/kuzzle-vault"
+  echo ""
+  echo "The password can also be provided within the KUZZLE_VAULT_KEY env variable"
+  echo "or it will be asked on the standard input"
+  echo ""
+  echo "Examples:"
+  echo " $ bash kuzzle-vault-encrypt.sh 107ee9f7820f4efe633630b38b5e3c28 secret-vault-password"
+  echo " $ bash kuzzle-vault-encrypt.sh 107ee9f7820f4efe633630b38b5e3c28"
+  echo " $ KUZZLE_VAULT_KEY=secret-vault-password bash kuzzle-vault-encrypt.sh 107ee9f7820f4efe633630b38b5e3c28"
+  echo ""
+  exit 0
+fi
+
+iv=$(openssl rand -hex 16)
+
+secret=$1
+if [ -z "$secret" ];
+then
+  echo "First argument should be the secret to be encrypted"
+  exit 1
+fi
+
+key=$2
+if [ -z "$key" ];
+then
+  key=$KUZZLE_VAULT_KEY
+fi
+
+if [ -z "$key" ];
+then
+  read -p "Please input encryption key: " key
+fi
+
+key_hash=$(echo -n $key | sha256sum)
+
+encrypted=$(echo -n $secret | openssl enc -aes-256-cbc -nosalt -e -a -K $key_hash -iv $iv | base64 -d | hexdump -e '16/1 "%02x"')
+
+echo $encrypted.$iv
+
