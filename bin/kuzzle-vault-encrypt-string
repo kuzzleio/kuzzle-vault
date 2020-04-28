@@ -41,9 +41,8 @@ then
   read -p "Please input encryption key: " key
 fi
 
-key_hash=$(echo -n $key | sha256sum)
+key_hash=$(echo -n $key | openssl dgst -sha256 | cut -d" " -f 2)
 
-encrypted=$(echo -n $secret | openssl enc -aes-256-cbc -e -a -K $key_hash -iv $iv | base64 -d | hexdump -e '16/1 "%02x"')
+encrypted=$(echo -n $secret | openssl enc -aes-256-cbc -nosalt -e -base64 -K $key_hash -iv $iv | base64 -d | hexdump -e '16/1 "%02x"')
 
 echo $encrypted.$iv
-
