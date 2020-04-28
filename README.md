@@ -55,7 +55,7 @@ $ bash bin/kuzzle-vault-encrypt-string kuzzle-vault-encrypt-string something_sec
 cad308c9e857accc2d82dffb70e59dbe1460545372d6c0620dd46136ad16ae44.52a6a6e897696ec45f5715df12818939
 ```
 
-Then put the string in a JSON file:
+Then put the encrypted string in a JSON file:
 ```json
 {
   "secret-key": "cad308c9e857accc2d82dffb70e59dbe1460545372d6c0620dd46136ad16ae44.52a6a6e897696ec45f5715df12818939"
