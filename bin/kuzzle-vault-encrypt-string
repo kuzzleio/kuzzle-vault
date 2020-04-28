@@ -43,7 +43,7 @@ fi
 
 key_hash=$(echo -n $key | sha256sum)
 
-encrypted=$(echo -n $secret | openssl enc -aes-256-cbc -nosalt -e -a -K $key_hash -iv $iv | base64 -d | hexdump -e '16/1 "%02x"')
+encrypted=$(echo -n $secret | openssl enc -aes-256-cbc -e -a -K $key_hash -iv $iv | base64 -d | hexdump -e '16/1 "%02x"')
 
 echo $encrypted.$iv
 
