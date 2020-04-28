@@ -1,8 +1,0 @@
-*#
-node_modules
-ssl
-.git
-.gitignore
-.nyc_output
-coverage
-test
