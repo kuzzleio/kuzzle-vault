@@ -7,7 +7,7 @@ install:
   - npm i -g kourou
 script:
   - npm test
-  - openssl --version
+  - openssl version
   - bash test/kuzzle-vault-encrypt-string.test.sh
 notifications:
   email: false
