@@ -34,6 +34,8 @@ ___
 First, you need to encrypt your secrets. The easiest way to do that is to use [Kourou, the Kuzzle CLI](https://github.com/kuzzleio/kourou/#kourou-vaultadd-secrets-file-key-value).
 
 ```bash
+$ npm install -g kourou
+
 $ kourou vault:encrypt config/prod/secrets.json --vault-key <password>
 
  🚀 Kourou - Encrypts an entire file.
@@ -43,7 +45,7 @@ $ kourou vault:encrypt config/prod/secrets.json --vault-key <password>
 
 Then, you can securely store your secrets inside your repository and share them with you team. 
 
-### With Bash
+#### With Bash
 
 Alternatively, you can also use the [bash script provided](./bin/kuzzle-vault-encrypt-string) in this repository to encrypt a string in Kuzzle Vault format.
 
