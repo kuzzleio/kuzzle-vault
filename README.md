@@ -92,6 +92,16 @@ vault.decrypt('config/prod/secrets.enc.json');
 vault.secrets
 ```
 
+### Data encryption
+
+The cipher used is `aes-256-cbc` with a 16 bytes initialization vector.  
+
+The encryption key is hashed with SHA256 and then used with a random initialization vector to encrypt the data.  
+
+Encrypted values are represented under the following format `<encrypted-data>.<initialization-vector>`.  
+
+Both `<encrypted-data>` and `<initialization-vector>` are in hexadecimal.
+
 ### Secrets file format
 
 The secrets file is in JSON format. String values are encrypted but the key names remain the same.
@@ -112,9 +122,9 @@ Once encrypted, the file looks like the following:
 /* secrets.enc.json */
 {
   "aws": {
-    "secretKeyId": "536553f3181ada6f700cac98100f1266.3181ada66536553f"
+    "secretKeyId": "81f52891e336c76c82033c38f44d28.81f3214be3836bbb9fa165dfa691071a"
   },
-  "cloudinaryKey": "f700cac98100f1266536553f3181ada6.6536553f3181ada"
+  "cloudinaryKey": "f700cac98100f1266536553f3181ada6.65dfa691071a81f3214be3836bbb9fa1"
 }
 ```
 
