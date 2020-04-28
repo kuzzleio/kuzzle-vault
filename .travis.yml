@@ -4,8 +4,10 @@ node_js:
   - 12
 install:
   - npm install
+  - npm i -g kourou
 script:
   - npm test
+  - bash test/kuzzle-vault-encrypt-string.test.sh
 notifications:
   email: false
   slack:
