@@ -53,7 +53,7 @@ It will give you an encrypted string that you have to put in your JSON file cont
 
 Example:
 ```bash
-$ bash bin/kuzzle-vault-encrypt-string kuzzle-vault-encrypt-string something_secret <password> 
+$ bash bin/kuzzle-vault-encrypt-string kuzzle-vault-encrypt-string something_secret vaultKey
 cad308c9e857accc2d82dffb70e59dbe1460545372d6c0620dd46136ad16ae44.52a6a6e897696ec45f5715df12818939
 ```
 
