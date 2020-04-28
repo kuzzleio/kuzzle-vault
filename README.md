@@ -45,7 +45,7 @@ Then, you can securely store your secrets inside your repository and share them 
 
 ### With Bash
 
-Alternatively, you can also use the [bash script provided](./bin/kuzzle-vault-encrypt-string) in this repository to encrypt secret in Kuzzle Vault format.
+Alternatively, you can also use the [bash script provided](./bin/kuzzle-vault-encrypt-string) in this repository to encrypt a string in Kuzzle Vault format.
 
 It will give you an encrypted string that you have to put in you JSON file containing encrypted secrets.
 
