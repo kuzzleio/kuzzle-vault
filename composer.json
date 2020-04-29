@@ -1,0 +1,24 @@
+{
+  "name": "kuzzleio/kuzzle-vault",
+  "version": "1.0.0",
+  "description": "Kuzzle Vault for PHP",
+  "homepage": "http://kuzzle.io",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "The Kuzzle Team",
+      "email": "support@kuzzle.io",
+      "homepage": "http://kuzzle.io"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/kuzzleio/kuzzle-vault/issues"
+  },
+  "autoload": {
+  },
+  "require": {
+    "php": ">=5.4"
+  },
+  "require-dev": {
+  }
+}
