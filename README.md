@@ -102,12 +102,13 @@ Once encrypted, the file looks like the following:
 
 ## Vault class
 
-[Vault.constructor](#constructor)
-[Vault.decrypt](#decrypt)
+[Vault.constructor](#vault-constructor)  
+
+[Vault.decrypt](#vault-decrypt)
 
 ___
 
-### Vault->__construct
+### Vault.constructor
 
 The constructor of the `Vault` class.
 
@@ -129,7 +130,7 @@ $vault = new Vault("password");
 
 ___
 
-### Vault->decrypt
+### Vault.decrypt
 
 Decrypts the content of the file designated by `$encrypted_vault_path` and store the decrypted content inside the member `secrets` of the `Vault` class.
 
