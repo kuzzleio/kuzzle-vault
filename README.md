@@ -42,28 +42,36 @@ $ kourou vault:encrypt config/prod/secrets.json --vault-key <password>
 
 Then, you can securely store your secrets inside your repository and share them with you team. 
 
-To load the secrets inside an application, instantiate the Vault with the same password as for the encryption.
+
+To load the secrets inside an application, instantiate the Kuzzle Vault with the same password as for the encryption.
 
 Then, use the decrypt method with the path of the encrypted secrets file to load the secrets into the memory.  
 
-```js
-const vault = new Vault('password');
-vault.decrypt('config/prod/secrets.enc.json');
+```php
+<?php
 
-// secrets are now available
-vault.secrets
+require "./src/Vault.php";
+
+$vault = new Vault("password");
+
+$vault->decrypt("./secrets.enc.json");
+
+// secrets are now available in the associative array
+$vault->secrets
 ```
 
 You can also provide the password with the environment variable `KUZZLE_VAULT_KEY`.  
 
-```js
-// process.env.KUZZLE_VAULT_KEY === 'password'
+```php
+// export KUZZLE_VAULT_KEY === 'password'
 
-const vault = new Vault();
-vault.decrypt('config/prod/secrets.enc.json');
+<?php
 
-// secrets are now available
-vault.secrets
+require "./src/Vault.php";
+
+$vault = new Vault();
+
+$vault->decrypt("./secrets.enc.json");
 ```
 
 ### Secrets file format
@@ -86,9 +94,9 @@ Once encrypted, the file looks like the following:
 /* secrets.enc.json */
 {
   "aws": {
-    "secretKeyId": "536553f3181ada6f700cac98100f1266.3181ada66536553f"
+    "secretKeyId": "536553f3181ada6f700cac98100f1266.3181ada66536553f6536553f3181ada"
   },
-  "cloudinaryKey": "f700cac98100f1266536553f3181ada6.6536553f3181ada"
+  "cloudinaryKey": "f700cac98100f1266536553f3181ada6.6536553f3181ada3181ada66536553f"
 }
 ```
 
@@ -99,56 +107,57 @@ Once encrypted, the file looks like the following:
 
 ___
 
-### Vault.constructor
+### Vault->__construct
 
 The constructor of the `Vault` class.
 
-```js
-Vault(vaultKey: string | undefined);
+```php
+public function __construct($vault_key);
 ```
 
 **Arguments**
 
 | Name | Type              | Description |
 | -------- | ----------------- | ----------- |
-| `vaultKey`  | <pre>String</pre> | The key used to encrypt and decrypt secrets   |
+| `$vault_key`  | <pre>string</pre> | The key used to encrypt and decrypt secrets (optionnal)  |
 
 #### Usage
 
-```js
-const vault = new Vault('my vault key');
+```php
+$vault = new Vault("password");
 ```
 
 ___
 
-### Vault.decrypt
+### Vault->decrypt
 
-Decrypts the content of the file designated by `encryptedVaultPath` and store the decrypted content inside the property `secrets` of the `Vault` class.
+Decrypts the content of the file designated by `$encrypted_vault_path` and store the decrypted content inside the member `secrets` of the `Vault` class.
 
 <br/>
 
-```js
-decrypt(encryptedVaultPath: string);
+```php
+decrypt($encrypted_vault_path);
 ```
 
 
 #### Usage
 
-```js
-const vault = new Vault('my vault key');
-vault.decrypt('path/to/secrets.enc.json');
+```php
+$vault = new Vault("password");
 
-vault.secrets // Contains decrypted secrets
+$vault->decrypt("./secrets.enc.json");
+
+$vault->secrets // Contains decrypted secrets
 ```
 
-## [Cryptonomicon](./src/Cryptonomicon.ts) class
+## [Cryptonomicon](./src/Vault.php) class
 
 This class contains the cryptography primitives used to encrypt and decrypt the secrets.  
 
 There are 4 methods available:
- - `decryptObject`
- - `encryptObject`
- - `encryptString`
- - `decryptString`
+ - `decrypt_object`
+ - `encrypt_object`
+ - `encrypt_string`
+ - `decrypt_string`
 
 You can use this class to build your own tools to decrypt or encrypt secrets inside your application.
