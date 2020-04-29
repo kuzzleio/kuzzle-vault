@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  php:
+    image: kuzzleio/php-dev:7.3
+    command: bash
+    network_mode: "host"
+    volumes:
+      - ".:/var/app"
