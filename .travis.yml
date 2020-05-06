@@ -4,8 +4,12 @@ node_js:
   - 12
 install:
   - npm install
+  - npm i -g kourou
+  - sudo apt-get install -y openssl
 script:
   - npm test
+  - openssl version
+  - bash test/kuzzle-vault-encrypt-string.test.sh
 notifications:
   email: false
   slack:

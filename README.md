@@ -30,9 +30,16 @@ ___
 
 ## Usage
 
+
+### Encrypt your secrets in a JSON file
+
+#### With Kourou (NPM package)
+
 First, you need to encrypt your secrets. The easiest way to do that is to use [Kourou, the Kuzzle CLI](https://github.com/kuzzleio/kourou/#kourou-vaultadd-secrets-file-key-value).
 
 ```bash
+$ npm install -g kourou
+
 $ kourou vault:encrypt config/prod/secrets.json --vault-key <password>
 
  🚀 Kourou - Encrypts an entire file.
@@ -41,6 +48,29 @@ $ kourou vault:encrypt config/prod/secrets.json --vault-key <password>
 ```
 
 Then, you can securely store your secrets inside your repository and share them with you team. 
+
+#### With Bash
+
+Alternatively, you can also use the [bash script provided](./bin/kuzzle-vault-encrypt-string) in this repository to encrypt a string in Kuzzle Vault format.
+
+It will give you an encrypted string that you have to put in your JSON file containing encrypted secrets.
+
+Example:
+```bash
+$ bash bin/kuzzle-vault-encrypt-string kuzzle-vault-encrypt-string something_secret vaultKey
+cad308c9e857accc2d82dffb70e59dbe1460545372d6c0620dd46136ad16ae44.52a6a6e897696ec45f5715df12818939
+```
+
+Then put the encrypted string in a JSON file:
+```json
+{
+  "secret-key": "cad308c9e857accc2d82dffb70e59dbe1460545372d6c0620dd46136ad16ae44.52a6a6e897696ec45f5715df12818939"
+}
+```
+
+The complete script documentation is available with `bash bin/kuzzle-vault-encrypt-string --help`.
+
+### Use encrypted secrets within your application
 
 To load the secrets inside an application, instantiate the Vault with the same password as for the encryption.
 
@@ -66,6 +96,16 @@ vault.decrypt('config/prod/secrets.enc.json');
 vault.secrets
 ```
 
+### Data encryption
+
+The cipher used is `aes-256-cbc` with a 16 bytes initialization vector.  
+
+The encryption key is hashed with SHA256 and then used with a random initialization vector to encrypt the data.  
+
+Encrypted values are represented under the following format `<encrypted-data>.<initialization-vector>`.  
+
+Both `<encrypted-data>` and `<initialization-vector>` are in hexadecimal.
+
 ### Secrets file format
 
 The secrets file is in JSON format. String values are encrypted but the key names remain the same.
@@ -86,9 +126,9 @@ Once encrypted, the file looks like the following:
 /* secrets.enc.json */
 {
   "aws": {
-    "secretKeyId": "536553f3181ada6f700cac98100f1266.3181ada66536553f"
+    "secretKeyId": "81f52891e336c76c82033c38f44d28.81f3214be3836bbb9fa165dfa691071a"
   },
-  "cloudinaryKey": "f700cac98100f1266536553f3181ada6.6536553f3181ada"
+  "cloudinaryKey": "f700cac98100f1266536553f3181ada6.65dfa691071a81f3214be3836bbb9fa1"
 }
 ```
 
