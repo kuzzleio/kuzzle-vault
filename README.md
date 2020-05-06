@@ -47,6 +47,7 @@ To load the secrets inside an application, instantiate the Kuzzle Vault with the
 
 Then, use the decrypt method with the path of the encrypted secrets file to load the secrets into the memory.  
 
+Copy the [Vault.php](src/Vault.php) file into your application and then you can decrypt your secrets:
 ```php
 <?php
 
