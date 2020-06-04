@@ -205,7 +205,7 @@ class Vault
     $file_content = file_get_contents($encrypted_vault_path);
 
     $encrypted_secrets = json_decode($file_content);
-    print_r($encrypted_secrets);
+
     $this->secrets = $this->cryptonomicon->decrypt_object($encrypted_secrets);
   }
 
