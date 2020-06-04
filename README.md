@@ -23,8 +23,8 @@ Then you can load and decrypt the contents of the file into your **application m
 See the related article on [Kuzzle Blog](https://blog.kuzzle.io/share-sensitive-data-with-git-and-cryptography)
 
 Implementations are available for the following languages:
- - [Node.js](https://github.com/kuzzleio/kuzzle-vault/blob/master/README.md)
- - [PHP](https://github.com/kuzzleio/kuzzle-vault/blob/php/README.md)
+ - [Node.js](https://github.com/kuzzleio/kuzzle-vault/)
+ - [PHP](https://github.com/kuzzleio/kuzzle-vault/tree/php)
 
 ___
 

@@ -14,15 +14,17 @@ class Cryptonomicon
 
   /**
    * Prepare crypto primitives.
-   * Use the key passed in parameter or in environment variable.
+   * Use the key passed in parameter or in environment variable (KUZZLE_VAULT_KEY).
    *
    * @param string $vault_key - key used to decrypt the secrets
    */
-  public function __construct ($vault_key)
+  public function __construct ($vault_key = "")
   {
-    $this->empty_key = strlen($vault_key) === 0;
+    $key = strlen($vault_key) !== 0 ? $vault_key : getenv('KUZZLE_VAULT_KEY');
 
-    $this->vault_key_hash = hex2bin(hash("sha256", $vault_key));
+    $this->empty_key = strlen($key) === 0;
+
+    $this->vault_key_hash = hex2bin(hash("sha256", $key));
   }
 
   /**
@@ -205,9 +207,7 @@ class Vault
     $file_content = file_get_contents($encrypted_vault_path);
 
     $encrypted_secrets = json_decode($file_content);
-    print_r($encrypted_secrets);
+
     $this->secrets = $this->cryptonomicon->decrypt_object($encrypted_secrets);
   }
-
-
 }
