@@ -22,6 +22,7 @@
 'use strict';
 
 import * as fs from 'fs';
+import * as path from 'path';
 
 import * as YAML from 'yaml';
 
@@ -65,7 +66,9 @@ export default class Vault {
    *   - `format`: encrypted file format, either `json` (default) or `yaml`
    */
   decrypt (encryptedVaultPath: string, options?: { format?: 'json' | 'yaml' }): {} {
-    const { format } = options || { format: 'json' };
+    const format = options
+      ? options.format || guessFormat(encryptedVaultPath)
+      : guessFormat(encryptedVaultPath);
 
     if (this.cryptonomicon.emptyKey) {
       throw new Error('No Vault key provided');
@@ -91,3 +94,12 @@ export default class Vault {
   }
 }
 
+
+function guessFormat (path: string): string {
+  const parts = path.split('.');
+  const format = parts[parts.length - 1];
+
+  return ['json', 'yaml'].includes(format)
+    ? format
+    : 'json';
+}

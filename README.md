@@ -14,7 +14,7 @@
 
 Kuzzle Vault is a system to **securely share your API keys** and other secrets within your team.
 
-Secrets are saved in **an encrypted JSON file** that you can version alongside your code.
+Secrets are saved in **an encrypted JSON or YAML file** that you can version alongside your code.
 
 You only need to **share one encryption key** with your team members.
 
@@ -79,6 +79,8 @@ Then, use the decrypt method with the path of the encrypted secrets file to load
 ```js
 const vault = new Vault('password');
 vault.decrypt('config/prod/secrets.enc.json');
+// or
+vault.decrypt('config/prod/secrets.enc.yaml');
 
 // secrets are now available
 vault.secrets
@@ -108,7 +110,7 @@ Both `<encrypted-data>` and `<initialization-vector>` are in hexadecimal.
 
 ### Secrets file format
 
-The secrets file is in JSON format. String values are encrypted but the key names remain the same.
+The secrets file is in JSON or YAML format. String values are encrypted but the key names remain the same.
 
 ```json
 /* secrets.json */
@@ -118,6 +120,14 @@ The secrets file is in JSON format. String values are encrypted but the key name
   },
   "cloudinaryKey": "ho-chi-minh"
 }
+```
+
+```yaml
+aws:
+  - secretKeyId: "lfiduras"
+  - groups:
+    primary
+    secondary    
 ```
 
 Once encrypted, the file looks like the following:
@@ -131,6 +141,15 @@ Once encrypted, the file looks like the following:
   "cloudinaryKey": "f700cac98100f1266536553f3181ada6.65dfa691071a81f3214be3836bbb9fa1"
 }
 ```
+
+```yaml
+aws:
+  - secretKeyId: "81f52891e336c76c82033c38f44d28.81f3214be3836bbb9fa165dfa691071a"
+  - groups:
+    "f700cac98100f1266536553f3181ada6.65dfa691071a81f3214be3836bbb9fa1"
+    "1266536553ff700cac98100f3181ada6.a81f3214be3865dfa69107136bbb9fa1"    
+```
+
 
 ## Vault class
 
