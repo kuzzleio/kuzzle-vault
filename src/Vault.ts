@@ -99,7 +99,7 @@ function guessFormat (path: string): string {
   const parts = path.split('.');
   const format = parts[parts.length - 1];
 
-  return ['json', 'yaml'].includes(format)
+  return ['json', 'yaml', 'yml'].includes(format)
     ? format
     : 'json';
 }
