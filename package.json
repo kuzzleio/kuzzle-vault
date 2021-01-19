@@ -25,7 +25,9 @@
     "url": "https://github.com/kuzzleio/kuzzle-vault/issues"
   },
   "homepage": "https://github.com/kuzzleio/kuzzle-vault#readme",
-  "dependencies": {},
+  "dependencies": {
+    "yaml": "^1.10.0"
+  },
   "devDependencies": {
     "@types/mocha": "^7.0.2",
     "@types/mock-fs": "^4.10.0",

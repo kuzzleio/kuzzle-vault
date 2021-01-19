@@ -56,25 +56,27 @@ export default class Cryptonomicon {
    *
    * @returns {Object} Object with decrypted values
    */
-  decryptObject (encryptedSecrets: any, path?: string): {} {
-    const secrets: any = {};
+  decryptObject (encryptedSecrets: any): {} {
+    if (Array.isArray(encryptedSecrets)) {
+      const secrets: any = [];
 
-    for (const key of Object.keys(encryptedSecrets)) {
-      const value: string|any = encryptedSecrets[key];
-
-      const currentPath = [path, key].filter(e => e).join('.');
-
-      if (value && typeof value === 'object' && !Array.isArray(value)) {
-        secrets[key] = this.decryptObject(value, currentPath);
+      for (const value of Object.values(encryptedSecrets)) {
+        secrets.push(
+          typeof value === 'string'
+            ? this.decryptString(value)
+            : this.decryptObject(value)
+        );
       }
-      else if (typeof value === 'string') {
-        try {
-          secrets[key] = this.decryptString(value);
-        }
-        catch (error) {
-          throw new Error(`Error when decrypting "${currentPath}": ${error.message}`);
-        }
-      }
+
+      return secrets;
+    }
+
+    const secrets: any = {}
+
+    for (const [key, value] of Object.entries(encryptedSecrets)) {
+      secrets[key] = typeof value === 'string'
+        ? this.decryptString(value)
+        : this.decryptObject(value);
     }
 
     return secrets;
