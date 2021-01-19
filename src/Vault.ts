@@ -21,8 +21,11 @@
 
 'use strict';
 
-import * as fs from 'fs'
-import Cryptonomicon from './Cryptonomicon'
+import * as fs from 'fs';
+
+import * as YAML from 'yaml';
+
+import Cryptonomicon from './Cryptonomicon';
 
 export default class Vault {
   public cryptonomicon: Cryptonomicon;
@@ -54,7 +57,16 @@ export default class Vault {
     this.secrets = {};
   }
 
-  decrypt (encryptedVaultPath: string): void {
+  /**
+   * Decrypt the provided file with the vault key
+   *
+   * @param encryptedVaultPath Path to the encrypted file
+   * @param options
+   *   - `format`: encrypted file format, either `json` (default) or `yaml`
+   */
+  decrypt (encryptedVaultPath: string, options?: { format?: 'json' | 'yaml' }): {} {
+    const { format } = options || { format: 'json' };
+
     if (this.cryptonomicon.emptyKey) {
       throw new Error('No Vault key provided');
     }
@@ -63,16 +75,19 @@ export default class Vault {
       throw new Error(`Unable to find vault at "${encryptedVaultPath}"`);
     }
 
+    const parser = format === 'json' ? JSON.parse : YAML.parse;
+
     let encryptedSecrets;
     try {
-      encryptedSecrets = JSON.parse(fs.readFileSync(encryptedVaultPath, 'utf-8'));
-
+      encryptedSecrets = parser(fs.readFileSync(encryptedVaultPath, 'utf-8'));
     }
     catch (error) {
       throw new Error(`Cannot parse encrypted secrets from file "${encryptedVaultPath}": ${error.message}`);
     }
 
     this.secrets = this.cryptonomicon.decryptObject(encryptedSecrets);
+
+    return this.secrets;
   }
 }
 
