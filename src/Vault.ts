@@ -22,7 +22,6 @@
 'use strict';
 
 import * as fs from 'fs';
-import * as path from 'path';
 
 import * as YAML from 'yaml';
 
@@ -32,6 +31,15 @@ export default class Vault {
   public cryptonomicon: Cryptonomicon;
 
   public secrets: {};
+
+  /**
+   * Returns either the `JSON` or the `YAML` class
+   */
+  static getParser (encryptedVaultPath: string): any {
+    const format = guessFormat(encryptedVaultPath);
+
+    return ['yaml', 'yml'].includes(format) ? YAML : JSON;
+  }
 
   /**
    * Initialize the vault with the provided vault key or with the environment
@@ -93,7 +101,6 @@ export default class Vault {
     return this.secrets;
   }
 }
-
 
 function guessFormat (path: string): string {
   const parts = path.split('.');

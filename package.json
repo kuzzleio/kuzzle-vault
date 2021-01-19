@@ -10,10 +10,10 @@
     "test:lint": "eslint src/ test/ --max-warnings=0 --ext .ts --config .eslintrc",
     "check": "gts check",
     "clean": "gts clean",
-    "compile": "tsc -p .",
+    "build": "tsc -p .",
     "fix": "gts fix",
-    "prepare": "npm run compile",
-    "pretest": "npm run compile"
+    "prepare": "npm run build",
+    "pretest": "npm run build"
   },
   "repository": {
     "type": "git",
