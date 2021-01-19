@@ -56,7 +56,7 @@ export default class Cryptonomicon {
    *
    * @returns {Object} Object with decrypted values
    */
-  decryptObject (encryptedSecrets: any): {} {
+  decryptObject (encryptedSecrets: any): any {
     if (Array.isArray(encryptedSecrets)) {
       const secrets: any = [];
 
@@ -89,7 +89,7 @@ export default class Cryptonomicon {
    *
    * @returns {Object} Same object but with encrypted string values
    */
-  encryptObject (secrets: any): {} {
+  encryptObject (secrets: any): any {
     const encryptedSecrets: any = {};
 
     for (const key of Object.keys(secrets)) {

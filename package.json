@@ -7,7 +7,7 @@
   "scripts": {
     "test": "npm run --silent test:lint && npm run test:unit",
     "test:unit": "mocha -r ts-node/register test/*.ts",
-    "test:lint": "eslint src/ test/ --max-warnings=0 --ext .ts --config .eslintrc",
+    "test:lint": "eslint src/ test/ --ext .ts --config .eslintrc",
     "check": "gts check",
     "clean": "gts clean",
     "build": "tsc -p .",
@@ -29,21 +29,21 @@
     "yaml": "^1.10.0"
   },
   "devDependencies": {
-    "@types/mocha": "^7.0.2",
-    "@types/mock-fs": "^4.10.0",
-    "@types/node": "^10.0.3",
+    "@types/mocha": "^8.2.0",
+    "@types/mock-fs": "^4.13.0",
+    "@types/node": "^14.14.21",
     "@types/should": "^13.0.0",
-    "@types/sinon": "^7.5.2",
-    "@typescript-eslint/eslint-plugin": "^2.25.0",
-    "@typescript-eslint/parser": "^2.25.0",
-    "eslint": "^6.8.0",
-    "gts": "^1.1.2",
-    "mocha": "^6.2.0",
-    "mock-fs": "^4.11.0",
+    "@types/sinon": "^9.0.10",
+    "@typescript-eslint/eslint-plugin": "^4.14.0",
+    "@typescript-eslint/parser": "^4.14.0",
+    "eslint": "^7.18.0",
+    "gts": "^3.1.0",
+    "mocha": "^8.2.1",
+    "mock-fs": "^4.13.0",
     "should": "^13.2.3",
     "should-sinon": "0.0.6",
-    "sinon": "^7.4.2",
-    "ts-node": "^8.8.1",
-    "typescript": "~3.7.0"
+    "sinon": "^9.2.3",
+    "ts-node": "^9.1.1",
+    "typescript": "~4.1.3"
   }
 }

@@ -30,7 +30,7 @@ import Cryptonomicon from './Cryptonomicon';
 export default class Vault {
   public cryptonomicon: Cryptonomicon;
 
-  public secrets: {};
+  public secrets: any;
 
   /**
    * Returns either the `JSON` or the `YAML` class
@@ -73,7 +73,7 @@ export default class Vault {
    * @param options
    *   - `format`: encrypted file format, either `json` (default) or `yaml`
    */
-  decrypt (encryptedVaultPath: string, options?: { format?: 'json' | 'yaml' }): {} {
+  decrypt (encryptedVaultPath: string, options?: { format?: 'json' | 'yaml' }): any {
     const format = options
       ? options.format || guessFormat(encryptedVaultPath)
       : guessFormat(encryptedVaultPath);
