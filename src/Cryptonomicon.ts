@@ -19,9 +19,7 @@
  * limitations under the License.
  */
 
-'use strict';
-
-import * as crypto from 'crypto'
+import * as crypto from "crypto";
 
 /**
  * Cryptonomicon is a book serie from Neal Stephenson.
@@ -40,12 +38,10 @@ export default class Cryptonomicon {
    *
    * @param {string?} vaultKey - key used to decrypt the secrets
    */
-  constructor (vaultKey = '') {
-    this.emptyKey = vaultKey === '';
+  constructor(vaultKey = "") {
+    this.emptyKey = vaultKey === "";
 
-    this.vaultKeyHash = crypto.createHash('sha256')
-      .update(vaultKey)
-      .digest();
+    this.vaultKeyHash = crypto.createHash("sha256").update(vaultKey).digest();
   }
 
   /**
@@ -56,27 +52,28 @@ export default class Cryptonomicon {
    *
    * @returns {Object} Object with decrypted values
    */
-  decryptObject (encryptedSecrets: any): any {
+  decryptObject(encryptedSecrets: any): any {
     if (Array.isArray(encryptedSecrets)) {
       const secrets: any = [];
 
       for (const value of Object.values(encryptedSecrets)) {
         secrets.push(
-          typeof value === 'string'
+          typeof value === "string"
             ? this.decryptString(value)
-            : this.decryptObject(value)
+            : this.decryptObject(value),
         );
       }
 
       return secrets;
     }
 
-    const secrets: any = {}
+    const secrets: any = {};
 
     for (const [key, value] of Object.entries(encryptedSecrets)) {
-      secrets[key] = typeof value === 'string'
-        ? this.decryptString(value)
-        : this.decryptObject(value);
+      secrets[key] =
+        typeof value === "string"
+          ? this.decryptString(value)
+          : this.decryptObject(value);
     }
 
     return secrets;
@@ -89,16 +86,15 @@ export default class Cryptonomicon {
    *
    * @returns {Object} Same object but with encrypted string values
    */
-  encryptObject (secrets: any): any {
+  encryptObject(secrets: any): any {
     const encryptedSecrets: any = {};
 
     for (const key of Object.keys(secrets)) {
-      const value: string|any = secrets[key];
+      const value: string | any = secrets[key];
 
-      if (value && typeof value === 'object' && !Array.isArray(value)) {
+      if (value && typeof value === "object" && !Array.isArray(value)) {
         encryptedSecrets[key] = this.encryptObject(value);
-      }
-      else if (typeof value === 'string') {
+      } else if (typeof value === "string") {
         encryptedSecrets[key] = this.encryptString(value);
       }
     }
@@ -116,15 +112,15 @@ export default class Cryptonomicon {
    *
    * @returns {string} Encrypted string with IV (format: <encrypted-string>.<iv>)
    */
-  encryptString (decrypted: string): string {
+  encryptString(decrypted: string): string {
     const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipheriv('aes-256-cbc', this.vaultKeyHash, iv);
+    const cipher = crypto.createCipheriv("aes-256-cbc", this.vaultKeyHash, iv);
 
-    const encryptedData = cipher.update(decrypted, 'utf8', 'hex') + cipher.final('hex');
+    const encryptedData =
+      cipher.update(decrypted, "utf8", "hex") + cipher.final("hex");
 
-    return `${encryptedData}.${iv.toString('hex')}`;
+    return `${encryptedData}.${iv.toString("hex")}`;
   }
-
 
   /**
    * Decrypts a string with AES CBC using the initialization vector
@@ -134,29 +130,38 @@ export default class Cryptonomicon {
    *
    * @returns {string} Decrypted string
    */
-  decryptString (encrypted: string): string {
-    const [ encryptedData, ivHex ] = encrypted.split('.');
+  decryptString(encrypted: string): string {
+    const [encryptedData, ivHex] = encrypted.split(".");
 
     if (encryptedData.length === 0) {
-      throw new Error(`Invalid encrypted string format "${encryptedData}.${ivHex}"`);
+      throw new Error(
+        `Invalid encrypted string format "${encryptedData}.${ivHex}"`,
+      );
     }
 
     if (ivHex.length !== 32) {
       throw new Error(`Invalid IV size. (${ivHex.length}, expected 32)`);
     }
 
-    const iv = Buffer.from(ivHex, 'hex');
-    const decipher = crypto.createDecipheriv('aes-256-cbc', this.vaultKeyHash, iv);
+    const iv = Buffer.from(ivHex, "hex");
+    const decipher = crypto.createDecipheriv(
+      "aes-256-cbc",
+      this.vaultKeyHash,
+      iv,
+    );
 
     try {
-      return decipher.update(encryptedData, 'hex', 'utf8') + decipher.final('utf8');
-    }
-    catch (error) {
-      if (error.message.includes('bad decrypt')) {
-        throw new Error('Cannot decrypt encrypted value with the provided key');
+      return (
+        decipher.update(encryptedData, "hex", "utf8") + decipher.final("utf8")
+      );
+    } catch (error: any) {
+      if (error.message.includes("bad decrypt")) {
+        throw new Error("Cannot decrypt encrypted value with the provided key");
       }
 
-      throw new Error(`Encrypted input value format is not a valid: ${error.message}`);
+      throw new Error(
+        `Encrypted input value format is not a valid: ${error.message}`,
+      );
     }
   }
 }
