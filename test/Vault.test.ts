@@ -1,8 +1,9 @@
 import * as crypto from "crypto";
-import * as mockfs from "mock-fs";
 
 import Vault from "../src/Vault";
 
+// eslint-disable-next-line
+const mockfs = require("mock-fs");
 // eslint-disable-next-line
 const should = require("should");
 require("should-sinon");
