@@ -19,8 +19,8 @@
  * limitations under the License.
  */
 
-import Cryptonomicon from './Cryptonomicon'
+import Cryptonomicon from "./Cryptonomicon";
 
-import Vault from './Vault'
+import Vault from "./Vault";
 
-export { Vault, Cryptonomicon }
+export { Vault, Cryptonomicon };

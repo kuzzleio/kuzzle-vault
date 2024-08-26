@@ -19,13 +19,11 @@
  * limitations under the License.
  */
 
-'use strict';
+import * as fs from "fs";
 
-import * as fs from 'fs';
+import * as YAML from "yaml";
 
-import * as YAML from 'yaml';
-
-import Cryptonomicon from './Cryptonomicon';
+import Cryptonomicon from "./Cryptonomicon";
 
 export default class Vault {
   public cryptonomicon: Cryptonomicon;
@@ -35,10 +33,10 @@ export default class Vault {
   /**
    * Returns either the `JSON` or the `YAML` class
    */
-  static getParser (encryptedVaultPath: string): any {
+  static getParser(encryptedVaultPath: string): any {
     const format = guessFormat(encryptedVaultPath);
 
-    return ['yaml', 'yml'].includes(format) ? YAML : JSON;
+    return ["yaml", "yml"].includes(format) ? YAML : JSON;
   }
 
   /**
@@ -47,7 +45,7 @@ export default class Vault {
    *
    * @param {string|undefined} vaultKey - Vault key
    */
-  constructor (vaultKey?: string) {
+  constructor(vaultKey?: string) {
     const KUZZLE_VAULT_KEY = process.env.KUZZLE_VAULT_KEY;
 
     // delete the key from RAM
@@ -55,11 +53,9 @@ export default class Vault {
 
     if (KUZZLE_VAULT_KEY && KUZZLE_VAULT_KEY.length > 0) {
       this.cryptonomicon = new Cryptonomicon(KUZZLE_VAULT_KEY);
-    }
-    else if (vaultKey) {
+    } else if (vaultKey) {
       this.cryptonomicon = new Cryptonomicon(vaultKey);
-    }
-    else {
+    } else {
       this.cryptonomicon = new Cryptonomicon();
     }
 
@@ -73,27 +69,38 @@ export default class Vault {
    * @param options
    *   - `format`: encrypted file format, either `json` (default) or `yaml`
    */
-  decrypt (encryptedVaultPath: string, options?: { format?: 'json' | 'yaml' }): any {
+  decrypt(
+    encryptedVaultPath: string,
+    options?: { format?: "json" | "yaml" },
+  ): any {
     const format = options
       ? options.format || guessFormat(encryptedVaultPath)
       : guessFormat(encryptedVaultPath);
 
     if (this.cryptonomicon.emptyKey) {
-      throw new Error('No Vault key provided');
+      throw new Error("No Vault key provided");
     }
 
-    if (! fs.existsSync(encryptedVaultPath)) {
+    if (!fs.existsSync(encryptedVaultPath)) {
       throw new Error(`Unable to find vault at "${encryptedVaultPath}"`);
     }
 
-    const parser = format === 'json' ? JSON.parse : YAML.parse;
-
     let encryptedSecrets;
+
     try {
-      encryptedSecrets = parser(fs.readFileSync(encryptedVaultPath, 'utf-8'));
-    }
-    catch (error) {
-      throw new Error(`Cannot parse encrypted secrets from file "${encryptedVaultPath}": ${error.message}`);
+      if (format === "json") {
+        encryptedSecrets = JSON.parse(
+          fs.readFileSync(encryptedVaultPath, "utf-8"),
+        );
+      } else {
+        encryptedSecrets = YAML.parse(
+          fs.readFileSync(encryptedVaultPath, "utf-8"),
+        );
+      }
+    } catch (error: any) {
+      throw new Error(
+        `Cannot parse encrypted secrets from file "${encryptedVaultPath}": ${error.message}`,
+      );
     }
 
     this.secrets = this.cryptonomicon.decryptObject(encryptedSecrets);
@@ -102,11 +109,9 @@ export default class Vault {
   }
 }
 
-function guessFormat (path: string): string {
-  const parts = path.split('.');
+function guessFormat(path: string): string {
+  const parts = path.split(".");
   const format = parts[parts.length - 1];
 
-  return ['json', 'yaml', 'yml'].includes(format)
-    ? format
-    : 'json';
+  return ["json", "yaml", "yml"].includes(format) ? format : "json";
 }
