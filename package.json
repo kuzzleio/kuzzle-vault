@@ -1,6 +1,6 @@
 {
   "name": "kuzzle-vault",
-  "version": "2.1.0-beta.1",
+  "version": "2.1.0",
   "description": "Share and version sensitive data with your team by using cryptography.",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
