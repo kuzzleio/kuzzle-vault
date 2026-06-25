@@ -177,7 +177,7 @@ export default class Cryptonomicon {
 
     const iv = Buffer.from(ivHex, "hex");
     const decipher = crypto.createDecipheriv(
-      this.cipher as any,
+      this.cipher,
       this.vaultKeyHash,
       iv,
     );
