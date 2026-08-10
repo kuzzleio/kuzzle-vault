@@ -26,8 +26,6 @@
     "yaml": "^2.5.0"
   },
   "devDependencies": {
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
     "@types/mocha": "^8.2.0",
     "@types/mock-fs": "^4.13.0",
     "@types/node": "^22.20.0",
@@ -38,8 +36,7 @@
     "memfs": "^4.11.0",
     "mocha": "^8.2.1",
     "mock-fs": "5.2.0",
-    "semantic-release-config-kuzzle": "^1.0.0",
-    "semantic-release-slack-bot": "^4.0.2",
+    "semantic-release-config-kuzzle": "1.7.0",
     "should": "^13.2.3",
     "should-sinon": "0.0.6",
     "sinon": "^9.2.3",
