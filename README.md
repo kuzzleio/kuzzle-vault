@@ -100,13 +100,38 @@ vault.secrets
 
 ### Data encryption
 
-The cipher used is `aes-256-cbc` with a 16 bytes initialization vector.  
+The recommended cipher is `aes-256-gcm` with a 16 bytes initialization vector.
+The `aes-256-cbc` cipher is deprecated but supported for backward compatibility. 
 
 The encryption key is hashed with SHA256 and then used with a random initialization vector to encrypt the data.  
 
-Encrypted values are represented under the following format `<encrypted-data>.<initialization-vector>`.  
+Encrypted values are represented under the following format for `aes-256-gcm`: `<encrypted-data>.<initialization-vector>.<auth-tag>`.
+For the deprecated `aes-256-cbc`, the format is `<encrypted-data>.<initialization-vector>`.
 
-Both `<encrypted-data>` and `<initialization-vector>` are in hexadecimal.
+All parts (`<encrypted-data>`, `<initialization-vector>`, `<auth-tag>`) are in hexadecimal.
+
+### Migration from `aes-256-cbc` to `aes-256-gcm`
+
+If your vault was created using the older `aes-256-cbc` cipher, you should migrate to `aes-256-gcm`. You can do this by creating a simple Node.js script to re-encrypt your secrets:
+
+```js
+const { Vault, Cryptonomicon, CryptonomiconCipher } = require('kuzzle-vault');
+const fs = require('fs');
+
+const vaultKey = process.env.KUZZLE_VAULT_KEY || 'your-password';
+
+// 1. Decrypt old vault (defaults to aes-256-cbc)
+const oldVault = new Vault(vaultKey);
+const secrets = oldVault.decrypt('secrets.enc.json');
+
+// 2. Encrypt with new cipher
+const newCryptonomicon = new Cryptonomicon(vaultKey, { cipher: CryptonomiconCipher.AES_256_GCM });
+const newSecrets = newCryptonomicon.encryptObject(secrets);
+
+// 3. Save migrated secrets
+fs.writeFileSync('secrets.enc.json', JSON.stringify(newSecrets, null, 2));
+console.log('Migration successful!');
+```
 
 ### Secrets file format
 
@@ -163,7 +188,7 @@ ___
 The constructor of the `Vault` class.
 
 ```js
-Vault(vaultKey: string | undefined);
+Vault(vaultKey: string | undefined, options?: { cipher?: string });
 ```
 
 **Arguments**
@@ -171,11 +196,12 @@ Vault(vaultKey: string | undefined);
 | Name | Type              | Description |
 | -------- | ----------------- | ----------- |
 | `vaultKey`  | <pre>String</pre> | The key used to encrypt and decrypt secrets   |
+| `options`  | <pre>Object</pre> | Vault options (e.g., `{ cipher: 'aes-256-gcm' }`)   |
 
 #### Usage
 
 ```js
-const vault = new Vault('my vault key');
+const vault = new Vault('my vault key', { cipher: 'aes-256-gcm' });
 ```
 
 ___

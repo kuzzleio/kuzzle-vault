@@ -23,7 +23,7 @@ import * as fs from "fs";
 
 import * as YAML from "yaml";
 
-import Cryptonomicon from "./Cryptonomicon";
+import Cryptonomicon, { CryptonomiconCipher } from "./Cryptonomicon";
 
 export default class Vault {
   public cryptonomicon: Cryptonomicon;
@@ -44,19 +44,20 @@ export default class Vault {
    * variable KUZZLE_VAULT_KEY (and then delete it from env)
    *
    * @param {string|undefined} vaultKey - Vault key
+   * @param {object|undefined} options - Vault options
    */
-  constructor(vaultKey?: string) {
+  constructor(vaultKey?: string, options?: { cipher?: CryptonomiconCipher }) {
     const KUZZLE_VAULT_KEY = process.env.KUZZLE_VAULT_KEY;
 
     // delete the key from RAM
     delete process.env.KUZZLE_VAULT_KEY;
 
     if (KUZZLE_VAULT_KEY && KUZZLE_VAULT_KEY.length > 0) {
-      this.cryptonomicon = new Cryptonomicon(KUZZLE_VAULT_KEY);
+      this.cryptonomicon = new Cryptonomicon(KUZZLE_VAULT_KEY, options);
     } else if (vaultKey) {
-      this.cryptonomicon = new Cryptonomicon(vaultKey);
+      this.cryptonomicon = new Cryptonomicon(vaultKey, options);
     } else {
-      this.cryptonomicon = new Cryptonomicon();
+      this.cryptonomicon = new Cryptonomicon("", options);
     }
 
     this.secrets = {};

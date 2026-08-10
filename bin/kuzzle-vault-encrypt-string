@@ -21,6 +21,9 @@ then
   exit 0
 fi
 
+echo "WARNING: This script encrypts using the deprecated aes-256-cbc cipher." >&2
+echo "Please migrate to aes-256-gcm and use Kourou or the Node.js API instead." >&2
+
 iv=$(openssl rand -hex 16)
 
 secret=$1
