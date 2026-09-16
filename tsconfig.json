@@ -9,7 +9,8 @@
     "baseUrl": ".",
     "resolveJsonModule": true,
     "outDir": "build/",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*.ts",

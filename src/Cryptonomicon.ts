@@ -21,6 +21,11 @@
 
 import * as crypto from "crypto";
 
+export enum CryptonomiconCipher {
+  AES_256_CBC = "aes-256-cbc",
+  AES_256_GCM = "aes-256-gcm",
+}
+
 /**
  * Cryptonomicon is a book serie from Neal Stephenson.
  *
@@ -32,16 +37,29 @@ export default class Cryptonomicon {
 
   emptyKey: boolean;
 
+  cipher: CryptonomiconCipher;
+
   /**
    * Prepare crypto primitives.
    * Use the key passed in parameter or in environment variable.
    *
    * @param {string?} vaultKey - key used to decrypt the secrets
+   * @param {object?} options - cipher options
    */
-  constructor(vaultKey = "") {
+  constructor(vaultKey = "", options: { cipher?: CryptonomiconCipher } = {}) {
     this.emptyKey = vaultKey === "";
 
     this.vaultKeyHash = crypto.createHash("sha256").update(vaultKey).digest();
+
+    this.cipher = options.cipher || CryptonomiconCipher.AES_256_CBC;
+
+    if (this.cipher === CryptonomiconCipher.AES_256_CBC) {
+      // TODO: add a warning message about the old insecure algorithm
+    } else if (this.cipher !== CryptonomiconCipher.AES_256_GCM) {
+      throw new Error(
+        `Unsupported cipher "${this.cipher}". Supported ciphers are "aes-256-cbc" and "aes-256-gcm".`,
+      );
+    }
   }
 
   /**
@@ -110,14 +128,19 @@ export default class Cryptonomicon {
    *
    * @param {string} decrypted - String to encrypt
    *
-   * @returns {string} Encrypted string with IV (format: <encrypted-string>.<iv>)
+   * @returns {string} Encrypted string with IV (format: <encrypted-string>.<iv>[.<auth-tag>])
    */
   encryptString(decrypted: string): string {
     const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipheriv("aes-256-cbc", this.vaultKeyHash, iv);
+    const cipher = crypto.createCipheriv(this.cipher, this.vaultKeyHash, iv);
 
     const encryptedData =
       cipher.update(decrypted, "utf8", "hex") + cipher.final("hex");
+
+    if (this.cipher === CryptonomiconCipher.AES_256_GCM) {
+      const authTag = (cipher as crypto.CipherGCM).getAuthTag().toString("hex");
+      return `${encryptedData}.${iv.toString("hex")}.${authTag}`;
+    }
 
     return `${encryptedData}.${iv.toString("hex")}`;
   }
@@ -131,12 +154,21 @@ export default class Cryptonomicon {
    * @returns {string} Decrypted string
    */
   decryptString(encrypted: string): string {
-    const [encryptedData, ivHex] = encrypted.split(".");
+    const parts = encrypted.split(".");
+
+    if (this.cipher === CryptonomiconCipher.AES_256_CBC && parts.length !== 2) {
+      throw new Error(`Invalid encrypted string format for aes-256-cbc`);
+    } else if (
+      this.cipher === CryptonomiconCipher.AES_256_GCM &&
+      parts.length !== 3
+    ) {
+      throw new Error(`Invalid encrypted string format for aes-256-gcm`);
+    }
+
+    const [encryptedData, ivHex, authTagHex] = parts;
 
     if (encryptedData.length === 0) {
-      throw new Error(
-        `Invalid encrypted string format "${encryptedData}.${ivHex}"`,
-      );
+      throw new Error(`Invalid encrypted string format "${encrypted}"`);
     }
 
     if (ivHex.length !== 32) {
@@ -145,18 +177,30 @@ export default class Cryptonomicon {
 
     const iv = Buffer.from(ivHex, "hex");
     const decipher = crypto.createDecipheriv(
-      "aes-256-cbc",
+      this.cipher,
       this.vaultKeyHash,
       iv,
     );
+
+    if (this.cipher === CryptonomiconCipher.AES_256_GCM) {
+      (decipher as crypto.DecipherGCM).setAuthTag(
+        Buffer.from(authTagHex, "hex"),
+      );
+    }
 
     try {
       return (
         decipher.update(encryptedData, "hex", "utf8") + decipher.final("utf8")
       );
     } catch (error: any) {
-      if (error.message.includes("bad decrypt")) {
-        throw new Error("Cannot decrypt encrypted value with the provided key");
+      if (
+        error.message.includes("bad decrypt") ||
+        error.message.includes("Unsupported state") ||
+        error.message.includes("auth tag")
+      ) {
+        throw new Error(
+          "Cannot decrypt encrypted value with the provided key or cipher",
+        );
       }
 
       throw new Error(

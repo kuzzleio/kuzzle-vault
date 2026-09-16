@@ -1,9 +1,9 @@
 import * as crypto from "crypto";
+import * as fs from "fs";
+import * as path from "path";
 
 import Vault from "../src/Vault";
 
-// eslint-disable-next-line
-const mockfs = require("mock-fs");
 // eslint-disable-next-line
 const should = require("should");
 require("should-sinon");
@@ -17,6 +17,7 @@ describe("Vault", () => {
   let decryptedSecrets: any;
   let vault: Vault;
   let vaultKey: string;
+  const tmpFilePath = path.join(__dirname, "secrets.enc.json");
 
   beforeEach(() => {
     decryptedSecrets = {
@@ -44,9 +45,13 @@ describe("Vault", () => {
       },
     };
 
-    mockfs({
-      "/secrets.enc.json": JSON.stringify(encryptedSecrets),
-    });
+    fs.writeFileSync(tmpFilePath, JSON.stringify(encryptedSecrets));
+  });
+
+  afterEach(() => {
+    if (fs.existsSync(tmpFilePath)) {
+      fs.unlinkSync(tmpFilePath);
+    }
   });
 
   describe("#constructor", () => {
@@ -74,7 +79,7 @@ describe("Vault", () => {
     });
 
     it("should decrypt the secrets", () => {
-      vault.decrypt("/secrets.enc.json");
+      vault.decrypt(tmpFilePath);
 
       should(vault.secrets).be.eql(decryptedSecrets);
     });
@@ -83,13 +88,13 @@ describe("Vault", () => {
       vault = new Vault();
 
       should(() => {
-        vault.decrypt("/secrets.enc.json");
+        vault.decrypt(tmpFilePath);
       }).throw();
     });
 
     it("should throw if the vault file does not exists", () => {
       should(() => {
-        vault.decrypt("/other/secrets.enc.json");
+        vault.decrypt(path.join(__dirname, "non-existent.enc.json"));
       }).throw();
     });
   });
